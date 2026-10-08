@@ -312,9 +312,14 @@ function orgNode(b,fr){var gs=groups(b).map(function(g){
   if(b.n==="Київ"){var chief=gs.filter(function(x){return x.t==="Chief of BM"})[0],bm=gs.filter(function(x){return x.t==="Business Manager"})[0];
     var p2p=gs.filter(function(x){return x.t==="BM / P2P Manager"})[0];
     if(chief&&bm){chief.ch=[bm].concat(p2p?[p2p]:[]);gs=gs.filter(function(x){return x!==bm&&x!==p2p})}}
-  if(!fr){var isHead=function(x){return x.t==="CEO"||/^COO/.test(x.t)},isOwner=function(x){return/^(Partner|Акціонер|Співвласник)/.test(x.t)};
-    var head=gs.filter(isHead)[0];
-    if(head){head.ch=head.ch.concat(gs.filter(function(x){return x!==head&&!isOwner(x)}));gs=gs.filter(function(x){return x===head||isOwner(x)})}}
+  {var isHead=function(x){return x.t==="CEO"||/^COO/.test(x.t)},isOwner=function(x){return/^(Partner|Акціонер|Співвласник)/.test(x.t)};
+    var head=gs.filter(isHead)[0],owner=gs.filter(isOwner)[0];
+    if(head||owner){
+      var rest=gs.filter(function(x){return x!==head&&!isOwner(x)});
+      if(head)head.ch=head.ch.concat(rest);else owner.ch=owner.ch.concat(rest);
+      if(head&&owner){owner.ch=owner.ch.concat([head]);gs=gs.filter(isOwner)}
+      else if(head)gs=[head];
+      else gs=gs.filter(isOwner)}}
   return N("fn",b.n,pl(b.p.length),gs,{org:b,fr:fr})}
 var branches=N("hub","Філії",BR.length+" локацій",BR.map(function(b){return orgNode(b)}),{mode:"h"});
 var franch=N("hub","Франшизи","",FR.map(function(b){return orgNode(b,1)}),{mode:"h"});
@@ -513,11 +518,12 @@ function roleHtml(r,generic){
   if(r.k.length)h+='<h4>Показники ефективності</h4>'+listHtml(r.k,"ul");return h}
 function groupBoss(title,b){
   if(b.fr)return"";
-  if(/^(CEO|COO|Partner|Акціонер|Співвласник)/.test(title))return"";
-  function who(re,label){var x=b.p.filter(function(y){return re.test(y[1])})[0];return x?label+" ("+x[0]+")":""}
+  function who(re,label){var xs=b.p.filter(function(y){return re.test(y[1])});return xs.length?label+" ("+xs.map(function(y){return y[0]}).join(", ")+")":""}
+  if(/^(Partner|Акціонер|Співвласник)/.test(title))return"";
+  if(/^(CEO|COO)/.test(title))return who(/^Partner/,"Partner")||who(/^Акціонер/,"Акціонер");
   if(title==="Chief of BM")return"Андрій Остапчук (Управляючий партнер)";
   if(/Business Manager|^BM/.test(title)){var c=who(/^Chief of BM/,"Chief of BM");if(c)return c;var h=who(/^Head of BM/,"Head of BM Online");if(h)return h}
-  return who(/^CEO/,"CEO")||who(/^COO/,"COO")||"CEO локації"}
+  return who(/^CEO/,"CEO")||who(/^COO/,"COO")||who(/^Акціонер/,"Акціонер")||"CEO локації"}
 function personCard(p){
   var r=p.role||roleFor(p.pos);var boss=p.org?groupBoss(p.pos,p.org):(p.role?p.role.b:"");
   var h='<div class="fnlab">Людина</div><h2>'+esc(p.name)+'</h2><dl class="meta"><dt>Посада</dt><dd>'+(findRole(p.pos)?'<button type="button" class="poslink" data-pos="'+esc(p.pos)+'" title="Відкрити опис посади">'+esc(p.pos)+'</button>':esc(p.pos))+'</dd><dt>Локація</dt><dd>'+esc(p.where)+'</dd>'+(p.dep?'<dt>Відділ</dt><dd>'+esc(p.dep)+'</dd>':'')+(boss?'<dt>Керівник</dt><dd>'+esc(boss)+'</dd>':'')+'</dl>'+(p.handle?'<div class="pc-h">'+handleHtml(p.handle)+'</div>':'<div class="vacl">Telegram не вказано</div>')+
