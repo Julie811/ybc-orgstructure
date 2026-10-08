@@ -236,7 +236,7 @@ var BR=[
 {n:"Київ",f:"🇺🇦",p:[["Марія Усенко","Event Manager","@usenkomaria_ybc"],["Красноюдська Крістіна","Event Manager","@kristina_ybc"],["Катерина Вакулік","Chief of BM","@KaterynaVakulikYBC"],["Карацюба Світлана","Business Manager","@svetaks03"],["Герман Анна","Business Manager","@tendernessp1"],["Калабішка Вікторія","Business Manager","@k_viktoriaYBC"],["Шкуратова Маргарита","Business Manager","@Rita_YBC_Kyiv"],["Ніколова Софія","Business Manager","@Sofia_Nikolova_YBC"],["Клименко Яна","BM / P2P Manager","@yana_klymenko1"],["Пахуча Аріна","Business Manager","@arina_pakhucha_ybc"],["Коновалова Дарія","Business Manager","@DariiaKonovalovaYBC"]]},
 {n:"Львів",f:"🇺🇦",p:[["Гаврилів Оксана","CEO","@oksana_havryliv"],["Пелех Христина","Event Manager","@khrystynapelekh"],["Брижко Анна","Business Manager","@annabryzhko_ybc"],["Оліщак Лілія","Business Manager","@liliia_olishchak"],["Семенська Дарина","Business Manager","@darynka_sm"],["Гринчишин Оксана","BM / P2P Manager","@oksana_hrynchyshyn"]]},
 {n:"Харків",f:"🇺🇦",p:[["Колесник Анна","CEO","@ceo_ybc_kharkiv"],["Коноваленко Аліна","Event Manager","@alinakonovalenko"],["Приходько Вікторія","Business Manager","@Viktoriya_bm_ybc_kharkiv"],["Форостяна Ольга","P2P Manager","@OlhaForostiana"],["Лебєдєва Ксенія","P2P Manager","@lebedeva_kseniia"],["Ангеліс Анна","SMM Manager, Адміністратор YBC","@anna_ybc_space"],["Чернявський Валентин","Partner","@chernyavskiy_92"],["Пажин Анатолій","Partner","@pazhyn"]]},
-{n:"Одеса",f:"🇺🇦",p:[["Соловйов Євген","Акціонер","@ceo_seagate"],["Сасова Ганна","Event Manager","@annasasov"],["Ксенія Яцюк","Business Manager","@ksuyatsuk"],["Оксана Немцева","Business Manager","@nemtsevaoksana"]]},
+{n:"Одеса",f:"🇺🇦",p:[["Соловйов Євген","Partner","@ceo_seagate"],["Сасова Ганна","Event Manager","@annasasov"],["Ксенія Яцюк","Business Manager","@ksuyatsuk"],["Оксана Немцева","Business Manager","@nemtsevaoksana"]]},
 {n:"Дніпро",f:"🇺🇦",p:[["Вероніка Шевінонова","CEO","@Veronika_Shevinonova"],["Вероніка Кравчук","Комʼюніті менеджер","@Verona_Kr"]]},
 {n:"Варшава",f:"🇵🇱",p:[["Баршівський Андрій","COO","@a_barshivskyi"],["Кравченко Владислава","Sales Manager","@vladisslava_kr_ybc"],["Квасюк Юлія","Event Manager","@ykvasyuk"],["Стьоба Олена","Business Manager","@businessmanagerYBC"],["Стратійчук Юлія","Business Manager","@julia_stratiichuk"],["Сібілєва Марина","SMM","@hharise"]]},
 {n:"Вроцлав",f:"🇵🇱",p:[["Чічкань Максим","CEO","@Maks_YBC"],["Нечипуренко Тетяна","Business Manager","@Tetiana_Nech_YBC"],["Олеся Скалозуб","Business Manager","@Olesia_YBC"],["Олена Кравчук","SMM","@Olenka_Krav"]]},
@@ -244,9 +244,9 @@ var BR=[
 {n:"Онлайн",f:"",note:"Онлайн-філія для міст, де немає фізичного клубу.",p:[["Самородова Діана","Head of BM Online","@diana_yurkevich"],["Семілєтова Евеліна","Business Manager","@evelinasem"],["Єремеєва Катерина","Business Manager","@Katyaeremeevaaa"]]}
 ];
 var FR=[
-{n:"Кіпр",p:[["Польчин Олег","Акціонер","@ceo_seagate"],["Діана Аракелян","CEO","@ArakelyanDi"],["Копко Наталія","Event Manager","@nk_nknk"],["Запасна Катерина","Business Manager","@katez1909"]]},
-{n:"Бенелюкс",p:[["Роман Гах (Безимігрант)","Акціонер","@ceo_seagate"],["Смілик Вероніка","Community Manager","@veronika_smilyk_ybc"]]},
-{n:"Валенсія",p:[["Чичкань Максим","Акціонер","@ceo_seagate"],["Рейніш Ілля","Співвласник","@Reinish_IL"],["Каптан Дар'я","Business Manager","@DariaKaptan_YBC"]]}
+{n:"Кіпр",p:[["Польчин Олег","Partner","@ceo_seagate"],["Діана Аракелян","CEO","@ArakelyanDi"],["Копко Наталія","Event Manager","@nk_nknk"],["Запасна Катерина","Business Manager","@katez1909"]]},
+{n:"Бенелюкс",p:[["Роман Гах (Безимігрант)","Partner","@ceo_seagate"],["Смілик Вероніка","Community Manager","@veronika_smilyk_ybc"]]},
+{n:"Валенсія",p:[["Чичкань Максим","Partner","@ceo_seagate"],["Рейніш Ілля","Співвласник","@Reinish_IL"],["Каптан Дар'я","Business Manager","@DariaKaptan_YBC"]]}
 ];
 
 
@@ -519,7 +519,7 @@ function roleHtml(r,generic){
 function groupBoss(title,b){
   function who(re,label){var xs=b.p.filter(function(y){return re.test(y[1])});return xs.length?label+" ("+xs.map(function(y){return y[0]}).join(", ")+")":""}
   if(/^(Partner|Акціонер|Співвласник)/.test(title))return"";
-  function owners(){return b.fr?who(/^Акціонер/,"Акціонер"):[who(/^Partner/,"Partner"),who(/^Акціонер/,"Акціонер")].filter(Boolean).join(", ")}
+  function owners(){return[who(/^Partner/,"Partner"),who(/^Акціонер/,"Акціонер")].filter(Boolean).join(", ")}
   if(/^(CEO|COO)/.test(title))return owners();
   if(title==="Chief of BM")return"Андрій Остапчук (Управляючий партнер)";
   if(/Business Manager|^BM/.test(title)){var c=who(/^Chief of BM/,"Chief of BM");if(c)return c;var h=who(/^Head of BM/,"Head of BM Online");if(h)return h}
