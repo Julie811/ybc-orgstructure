@@ -501,7 +501,7 @@ function groupBoss(title,b){
   return who(/^CEO/,"CEO")||who(/^COO/,"COO")||"CEO локації"}
 function personCard(p){
   var r=p.role||roleFor(p.pos);var boss=p.org?groupBoss(p.pos,p.org):(p.role?p.role.b:"");
-  var h='<div class="fnlab">'+esc(p.where)+'</div><h2>'+esc(p.name)+'</h2><dl class="meta"><dt>Посада</dt><dd>'+esc(p.pos)+'</dd><dt>Де</dt><dd>'+esc(p.where)+'</dd>'+(boss?'<dt>Керівник</dt><dd>'+esc(boss)+'</dd>':'')+'</dl>'+(p.handle?'<div class="pc-h">'+handleHtml(p.handle)+'</div>':'<div class="vacl">Telegram не вказано</div>')+
+  var h='<div class="fnlab">'+esc(p.where)+'</div><h2>'+esc(p.name)+'</h2><dl class="meta"><dt>Посада</dt><dd>'+esc(p.pos)+'</dd><dt>Локація</dt><dd>'+esc(p.where)+'</dd>'+(boss?'<dt>Керівник</dt><dd>'+esc(boss)+'</dd>':'')+'</dl>'+(p.handle?'<div class="pc-h">'+handleHtml(p.handle)+'</div>':'<div class="vacl">Telegram не вказано</div>')+
     '<div class="btnrow"><button class="btn solid" id="pc-show">Показати на схемі</button>'+(r&&r!==p.role?'<button class="btn" id="pc-role">Опис посади</button>':(r?'<button class="btn" id="pc-role">Обов\'язки та KPI</button>':''))+'</div>';
   return h}
 function openPerson(p){
