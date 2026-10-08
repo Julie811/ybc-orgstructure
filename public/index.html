@@ -285,7 +285,7 @@ ROLES.concat([HEADBM,BMONL]).forEach(function(r){
   if(r.b===PART)r.b=(r.fn==="Фінанси"?"Олена Туз":"Андрій Остапчук")+" (Управляючий партнер)";
   else if(BOSSMAP[r.b]&&BOSSMAP[r.b].p.length)r.b=r.b+" ("+nm(BOSSMAP[r.b])+")"});
 R("Team Lead").b="Олена Туз (Управляючий партнер)";
-R("Franchise Manager").b="Андрій Остапчук (Управляючий партнер)";
+R("Franchise Manager").b="Chief of Sales";
 var mktFn=fnNode("Маркетинг",roleNode("CMO",[roleNode("SMM manager"),roleNode("Videomaker"),roleNode("Копірайтер")]));
 var salesFn=fnNode("Продажі",roleNode("Team Lead",[roleNode("Sales Manager"),roleNode("Асистент керівника")]));
 var itFn=fnNode("IT",roleNode("Head of IT",[roleNode("Zoho Developer"),roleNode("IT Support")]));
