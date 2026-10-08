@@ -43,6 +43,11 @@ h2,h4{font-family:var(--display);text-transform:uppercase;letter-spacing:.02em;f
 #cmenu button:hover{background:var(--accent-soft);color:var(--accent-strong)}
 #cmenu .all{border-bottom:1px solid var(--border);border-radius:8px 8px 0 0;color:var(--accent-strong);font-weight:700;margin-bottom:4px}
 .chip.on{border-color:var(--accent);color:var(--accent-strong)}
+.poslink{background:none;border:0;padding:0;font:inherit;color:var(--ink-muted);text-align:left;text-decoration:underline dotted;text-underline-offset:3px;cursor:pointer}
+.poslink:hover{color:var(--accent-strong);text-decoration-style:solid}
+.meta .poslink{color:var(--ink);font-weight:600}
+.back{display:inline-block;margin:0 0 10px;min-height:36px;border:1px solid var(--border);background:var(--surface);border-radius:10px;padding:0 12px;font:600 .82rem var(--body)}
+.back:hover{border-color:var(--accent)}
 .chip-link{display:inline-flex;align-items:center;text-decoration:none;color:var(--ink);margin-left:auto}
 .chip:hover{border-color:var(--accent);color:var(--accent-strong)}
 #vp{flex:1;position:relative;overflow:hidden;touch-action:none;cursor:grab}
@@ -481,7 +486,14 @@ function copyText(s,done){
   function fb(){var a=document.createElement("textarea");a.value=s;a.style.cssText="position:fixed;opacity:0";document.body.appendChild(a);a.select();try{document.execCommand("copy")}catch(e){}a.remove();done()}
   if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(s).then(done,fb)}else fb()}
 document.addEventListener("click",function(e){var b=e.target.closest(".copy");if(!b)return;e.stopPropagation();
-  copyText(b.dataset.copy,function(){b.innerHTML=OK_SVG;b.classList.add("done");b.title="Скопійовано";setTimeout(function(){b.innerHTML=COPY_SVG;b.classList.remove("done");b.title="Копіювати"},1400)})});function personRow(x){return'<div class="person"><div><b>'+esc(x[0])+'</b><br><span>'+esc(x[1])+'</span></div><div class="h">'+handleHtml(x[2])+'</div></div>'}
+  copyText(b.dataset.copy,function(){b.innerHTML=OK_SVG;b.classList.add("done");b.title="Скопійовано";setTimeout(function(){b.innerHTML=COPY_SVG;b.classList.remove("done");b.title="Копіювати"},1400)})});var curView=null;
+function findRole(t){var r=roleFor(t)||ROLES.filter(function(q){return q.t===t||q.t.replace(/ · .*/,"")===t})[0];return r&&(r.d.length||r.k.length)?r:null}
+function posHtml(t){return findRole(t)?'<button type="button" class="poslink" data-pos="'+esc(t)+'" title="Відкрити опис посади">'+esc(t)+'</button>':'<span>'+esc(t)+'</span>'}
+document.addEventListener("click",function(e){var b=e.target.closest(".poslink");if(!b)return;e.stopPropagation();
+  var r=findRole(b.dataset.pos);if(!r)return;var back=curView;
+  openDrawer((back?'<button type="button" class="back" id="bk">← Назад</button>':'')+roleHtml(r,true));
+  if(back)$("#bk").onclick=back});
+function personRow(x){return'<div class="person"><div><b>'+esc(x[0])+'</b><br>'+posHtml(x[1])+'</div><div class="h">'+handleHtml(x[2])+'</div></div>'}
 function listHtml(a,cls){var h="",open=false;
   a.forEach(function(x){if(x.charAt(0)==="#"){if(open)h+="</"+cls+">";open=false;h+='<div class="kg2">'+esc(x.slice(1))+'</div>'}
     else{if(!open){h+="<"+cls+">";open=true}h+="<li>"+esc(x)+"</li>"}});
@@ -503,10 +515,10 @@ function groupBoss(title,b){
   return who(/^CEO/,"CEO")||who(/^COO/,"COO")||"CEO локації"}
 function personCard(p){
   var r=p.role||roleFor(p.pos);var boss=p.org?groupBoss(p.pos,p.org):(p.role?p.role.b:"");
-  var h='<div class="fnlab">Людина</div><h2>'+esc(p.name)+'</h2><dl class="meta"><dt>Посада</dt><dd>'+esc(p.pos)+'</dd><dt>Локація</dt><dd>'+esc(p.where)+'</dd>'+(p.dep?'<dt>Відділ</dt><dd>'+esc(p.dep)+'</dd>':'')+(boss?'<dt>Керівник</dt><dd>'+esc(boss)+'</dd>':'')+'</dl>'+(p.handle?'<div class="pc-h">'+handleHtml(p.handle)+'</div>':'<div class="vacl">Telegram не вказано</div>')+
+  var h='<div class="fnlab">Людина</div><h2>'+esc(p.name)+'</h2><dl class="meta"><dt>Посада</dt><dd>'+(findRole(p.pos)?'<button type="button" class="poslink" data-pos="'+esc(p.pos)+'" title="Відкрити опис посади">'+esc(p.pos)+'</button>':esc(p.pos))+'</dd><dt>Локація</dt><dd>'+esc(p.where)+'</dd>'+(p.dep?'<dt>Відділ</dt><dd>'+esc(p.dep)+'</dd>':'')+(boss?'<dt>Керівник</dt><dd>'+esc(boss)+'</dd>':'')+'</dl>'+(p.handle?'<div class="pc-h">'+handleHtml(p.handle)+'</div>':'<div class="vacl">Telegram не вказано</div>')+
     '<div class="btnrow"><button class="btn solid" id="pc-show">Показати на схемі</button>'+(r&&r!==p.role?'<button class="btn" id="pc-role">Опис посади</button>':(r?'<button class="btn" id="pc-role">Обов\'язки та KPI</button>':''))+'</div>';
   return h}
-function openPerson(p){
+function openPerson(p){curView=function(){openPerson(p)};
   openDrawer(personCard(p));
   $("#pc-show").onclick=function(){var n=p.node;closeDrawer();openUp(n);render();n.el.classList.add("hit");fly(n,false)};
   var rb=$("#pc-role");if(rb){var r=p.role||roleFor(p.pos);rb.onclick=function(){openDrawer(roleHtml(r,!p.role))}}}
@@ -514,7 +526,7 @@ function rootDrawer(n){
   if(n.people.length===1)return openPerson({name:n.people[0].name,pos:n.people[0].pos,where:n.people[0].where,handle:n.people[0].handle,node:n});
   openDrawer('<div class="fnlab">Central Services</div><h2>'+esc(n.t)+'</h2><h4>Хто · '+n.people.length+'</h4>'+n.people.map(function(p){return personRow([p.name,p.pos,p.handle])}).join(""))}function fnDrawer(n){var rs=[];(function w(m){if(m.role)rs.push(m);m.ch.forEach(w)})(n);
   var h='<div class="fnlab">Відділ</div><h2>'+esc(n.t)+'</h2><h4>Посади · '+rs.length+'</h4>'+rs.map(function(m,i){return'<button class="rrow" data-i="'+i+'"><b>'+esc(m.t)+'</b><span>'+esc(m.s)+'</span></button>'}).join("");
-  openDrawer(h);Array.prototype.forEach.call(document.querySelectorAll("#drawer .rrow"),function(b){b.onclick=function(){openNode(rs[+b.dataset.i])}})}function openNode(n){
+  openDrawer(h);Array.prototype.forEach.call(document.querySelectorAll("#drawer .rrow"),function(b){b.onclick=function(){openNode(rs[+b.dataset.i])}})}function openNode(n){curView=function(){openNode(n)};
   if(n.people)return rootDrawer(n);
   if(n.role)return openDrawer(roleHtml(n.role));
   if(n.grp){var g=n.grp,r=roleFor(g.t),bs=groupBoss(g.t,n.org);
