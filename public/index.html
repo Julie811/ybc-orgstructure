@@ -290,7 +290,7 @@ var hrFn=fnNode("HR",roleNode("Head of HR",[roleNode("Recruiter")]));
 var finFn=fnNode("Фінанси",roleNode("CFO",[roleNode("Головний бухгалтер",[roleNode("Бухгалтер")]),roleNode("Фінансист"),roleNode("Економіст")]));
 var opsFn=N("fn","Операційна функція","",[roleNode("Корпоративний секретар"),roleNode("Franchise Manager"),roleNode("Асистент проєкту")]);
 var legalFn=fnNode("Юридична функція",roleNode("Юрист"));
-var central=N("hub","Central Services","Материнська компанія",[mktFn,itFn,hrFn,opsFn,legalFn],{mode:"h"});
+var central=N("hub","Central Services","Материнська компанія",[salesFn,finFn,mktFn,itFn,hrFn,opsFn,legalFn],{mode:"h"});
 var ALLFN=[mktFn,salesFn,itFn,hrFn,finFn,opsFn,legalFn];
 function groups(b){var g=[],m={};b.p.forEach(function(x){if(!m[x[1]]){m[x[1]]={t:x[1],people:[]};g.push(m[x[1]])}m[x[1]].people.push(x)});return g}
 function orgNode(b,fr){var gs=groups(b).map(function(g){
@@ -307,8 +307,8 @@ var P_TUZ={name:"Олена Туз",pos:"Управляючий партнер",
 var P_YAN={name:"Яна Матвійчук",pos:"Акціонер",handle:"@YanaMatviychukARENACS",where:"Central Services"};
 var P_SMA={name:"Андрій Смаль",pos:"Акціонер",handle:"@CRMMaker",where:"Central Services"};
 var ostap=N("root","Андрій Остапчук","Управляючий партнер",[central,branches],{mode:"h",people:[P_OST]});
-var tuz=N("root","Олена Туз","Управляючий партнер",[salesFn,finFn],{mode:"h",people:[P_TUZ]});
-var owners=N("root","Акціонери","Яна Матвійчук · Андрій Смаль",[ostap,tuz,franch],{mode:"h",people:[P_YAN,P_SMA]});
+var tuz=N("root","Олена Туз","Управляючий партнер",[],{mode:"h",people:[P_TUZ],links:[salesFn,finFn]});
+var owners=N("root","Акціонери","Яна Матвійчук · Андрій Смаль",[tuz,ostap,franch],{mode:"h",people:[P_YAN,P_SMA]});
 var world=N("root","","",[owners],{mode:"h",ghost:1,noEdge:1});
 
 var W=224,HGAP=22,VGAP=48,IND=26,GAP=14;
@@ -349,7 +349,8 @@ function render(){
       if(n.noEdge){draw(c);return}
       if(n.mode==="h"){var px=n.x+W/2,py=n.y+n.h,cx=c.x+W/2,my=py+VGAP/2;paths.push("M"+px+" "+py+"V"+my+"H"+cx+"V"+c.y)}
       else{var sx=n.x+14,cy=c.y+c.h/2;paths.push("M"+sx+" "+(n.y+n.h)+"V"+cy+"H"+c.x)}
-      draw(c)})})(world);
+      draw(c)});
+    (n.links||[]).forEach(function(c){var px=n.x+W/2,py=n.y+n.h,cx=c.x+W/2,my=py+VGAP/2;paths.push("M"+px+" "+py+"V"+my+"H"+cx+"V"+c.y)})})(world);
   svg.innerHTML='<path d="'+paths.join("")+'"/>'}
 function openUp(n){for(var p=n.par;p;p=p.par)if(p.k==="fn")p.open=true}
 
