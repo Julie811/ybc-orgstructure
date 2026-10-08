@@ -91,7 +91,11 @@ h2,h4{font-family:var(--display);text-transform:uppercase;letter-spacing:.02em;f
 .kg{list-style:none;margin-left:-1.3em;font:600 .78rem var(--body);text-transform:uppercase;letter-spacing:.08em;color:var(--ink-muted)}
 .person{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--border);font-size:.9rem;flex-wrap:wrap}
 .person span{color:var(--ink-muted)}.person .h{font-weight:600;font-size:.82rem;overflow-wrap:anywhere}
-.person .where{flex-basis:100%;font-size:.78rem}
+.tg-chip{display:inline-flex;align-items:center;gap:2px;max-width:100%;padding:3px 3px 3px 10px;border:1.5px solid var(--border);border-radius:10px;background:var(--surface-2)}
+.tg-t{font:600 .82rem var(--body);overflow-wrap:anywhere}
+.copy{flex:none;width:28px;height:28px;border:0;border-radius:7px;background:transparent;color:var(--ink-muted);display:grid;place-items:center}
+.copy:hover{background:var(--surface);color:var(--ink)}
+.copy.done{color:var(--accent-strong)}.person .where{flex-basis:100%;font-size:.78rem}
 .vacl{color:var(--ink-muted);font-size:.88rem;font-style:italic}
 .btn{margin-top:14px;min-height:44px;border:1.5px solid var(--accent);background:transparent;color:var(--accent-strong);border-radius:12px;padding:0 16px;font-weight:700}
 @media (max-width:600px){.ttl{display:none}.hint{display:none}.drawer{border-left:0}}
@@ -397,14 +401,21 @@ function openDrawer(html){$("#drawer").innerHTML='<button class="close" id="cl" 
 function closeDrawer(){$("#layer").hidden=true}
 $("#scrim").onclick=closeDrawer;
 document.addEventListener("keydown",function(e){if(e.key==="Escape"){closeDrawer();$("#res").hidden=true}});
-function personRow(x){return'<div class="person"><div><b>'+esc(x[0])+'</b><br><span>'+esc(x[1])+'</span></div><div class="h">'+esc(x[2]||"")+'</div></div>'}
+var COPY_SVG='<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8" rx="1.6"/><path d="M10.5 3.5v-.4a1.6 1.6 0 0 0-1.6-1.6H3.1a1.6 1.6 0 0 0-1.6 1.6v5.8a1.6 1.6 0 0 0 1.6 1.6h.4"/></svg>';
+var OK_SVG='<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>';
+function handleHtml(h){if(!h)return"";return'<span class="tg-chip"><span class="tg-t">'+esc(h)+'</span><button class="copy" type="button" data-copy="'+esc(h)+'" aria-label="Копіювати нік '+esc(h)+'" title="Копіювати">'+COPY_SVG+'</button></span>'}
+function copyText(s,done){
+  function fb(){var a=document.createElement("textarea");a.value=s;a.style.cssText="position:fixed;opacity:0";document.body.appendChild(a);a.select();try{document.execCommand("copy")}catch(e){}a.remove();done()}
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(s).then(done,fb)}else fb()}
+document.addEventListener("click",function(e){var b=e.target.closest(".copy");if(!b)return;e.stopPropagation();
+  copyText(b.dataset.copy,function(){b.innerHTML=OK_SVG;b.classList.add("done");b.title="Скопійовано";setTimeout(function(){b.innerHTML=COPY_SVG;b.classList.remove("done");b.title="Копіювати"},1400)})});function personRow(x){return'<div class="person"><div><b>'+esc(x[0])+'</b><br><span>'+esc(x[1])+'</span></div><div class="h">'+handleHtml(x[2])+'</div></div>'}
 function listHtml(a,cls){return'<'+cls+'>'+a.map(function(x){return x.charAt(0)==="#"?'<li class="kg">'+esc(x.slice(1))+'</li>':'<li>'+esc(x)+'</li>'}).join("")+'</'+cls+'>'}
 function roleHtml(r,generic){
   var h='<div class="fnlab">'+esc(generic?"Опис посади":r.fn)+'</div><h2>'+esc(r.t)+'</h2>';
   if(r.m)h+='<div class="mission"><b>Місія</b>'+esc(r.m)+'</div>';
   h+='<dl class="meta"><dt>Керівник</dt><dd>'+esc(r.b)+'</dd><dt>Локація</dt><dd>'+esc(r.l)+'</dd></dl>';
   if(!generic)h+='<h4>Хто на посаді · '+r.p.length+'</h4>';
-  if(!generic)h+=r.p.length?r.p.map(function(s){var a=s.split("|");return'<div class="person"><div><b>'+esc(a[0])+'</b></div><div class="h">'+esc(a[1]||"")+'</div>'+(a[2]?'<span class="where">'+esc(a[2])+'</span>':'')+'</div>'}).join(""):'<div class="vacl">У документі людину не вказано.</div>';
+  if(!generic)h+=r.p.length?r.p.map(function(s){var a=s.split("|");return'<div class="person"><div><b>'+esc(a[0])+'</b></div><div class="h">'+handleHtml(a[1])+'</div>'+(a[2]?'<span class="where">'+esc(a[2])+'</span>':'')+'</div>'}).join(""):'<div class="vacl">У документі людину не вказано.</div>';
   if(r.d.length)h+='<h4>Обов\'язки</h4>'+listHtml(r.d,"ol");else if(r.nodoc)h+='<div class="vacl">Опису обов\'язків у документі немає.</div>';
   if(r.k.length)h+='<h4>Показники ефективності</h4>'+listHtml(r.k,"ul");return h}
 function openNode(n){
