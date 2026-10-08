@@ -60,12 +60,12 @@ h2,h4{font-family:var(--display);text-transform:uppercase;letter-spacing:.02em;f
 .node .tg{position:absolute;right:9px;top:50%;transform:translateY(-50%);width:22px;height:22px;border-radius:50%;background:var(--accent);color:#fff;font:700 1rem/22px var(--body);text-align:center;font-style:normal}
 .node.fn{padding-right:38px}
 .node.hit{outline:3px solid var(--accent);outline-offset:3px}
-.dock{position:absolute;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:6px;z-index:10}
-.dock button{width:44px;height:44px;border-radius:12px;border:1px solid var(--border);background:var(--surface);box-shadow:var(--shadow);font:700 1.2rem var(--body);display:grid;place-items:center}
-.dock button:hover{border-color:var(--accent)}
-.dock .pct{width:auto;min-width:64px;padding:0 8px;height:36px;font-size:.82rem;font-weight:700;border-radius:10px;font-variant-numeric:tabular-nums}
-.zmenu{position:relative;align-self:flex-end}
-.zlist{position:absolute;right:calc(100% + 8px);bottom:0;list-style:none;margin:0;padding:6px;background:var(--surface);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:2px;min-width:120px}
+.dock{position:absolute;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));display:flex;align-items:center;gap:2px;padding:4px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);z-index:10}
+.dock button{width:40px;height:40px;border-radius:10px;border:0;background:transparent;font:700 1.2rem var(--body);display:grid;place-items:center}
+.dock button:hover{background:var(--surface-2)}
+.dock .pct{width:auto;min-width:84px;padding:0 10px;font-size:.88rem;font-variant-numeric:tabular-nums;display:flex;justify-content:center;gap:6px;border-left:1px solid var(--border);border-right:1px solid var(--border);border-radius:0}
+.zmenu{position:relative}
+.zlist{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(100% + 10px);list-style:none;margin:0;padding:6px;background:var(--surface);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:2px;min-width:120px}
 .zlist button{width:100%;height:36px;border:0;box-shadow:none;background:none;border-radius:8px;font:600 .88rem var(--body);text-align:left;padding:0 12px;display:block}
 .zlist button:hover,.zlist button.on{background:var(--accent-soft);color:var(--accent-strong)}
 .hint{position:absolute;left:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:10;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:8px 12px;font-size:.78rem;color:var(--ink-muted);max-width:min(340px,calc(100% - 96px));box-shadow:var(--shadow)}
@@ -102,8 +102,8 @@ h2,h4{font-family:var(--display);text-transform:uppercase;letter-spacing:.02em;f
   <div id="stage"><svg id="edges" width="1" height="1"></svg></div>
   <div class="hint">Колесо миші або щипок: масштаб. Тягніть, щоб рухати схему. Чорні блоки з «+» розкривають посади, на картці посади видно деталі.</div>
   <div class="dock">
-    <button id="zin" aria-label="Наблизити">+</button><button id="zout" aria-label="Віддалити">−</button>
-    <button id="fit" aria-label="Показати всю схему" title="Вся схема">⤢</button><div class="zmenu"><button class="pct" id="pct" aria-haspopup="true" aria-expanded="false" aria-label="Обрати масштаб">100% ▾</button><ul class="zlist" id="zlist" hidden></ul></div>
+    <button id="fit" aria-label="Показати всю схему" title="Вся схема">⤢</button><button id="zout" aria-label="Віддалити">−</button>
+    <div class="zmenu"><button class="pct" id="pct" aria-haspopup="true" aria-expanded="false" aria-label="Обрати масштаб">100% ▾</button><ul class="zlist" id="zlist" hidden></ul></div><button id="zin" aria-label="Наблизити">+</button>
   </div>
 </div>
 <div id="layer" hidden><div class="scrim" id="scrim"></div><aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label="Деталі"></aside></div>
@@ -315,7 +315,7 @@ function toggle(n){var ox=n.x*V.k+V.x,oy=n.y*V.k+V.y;n.open=!n.open;render();V.x
 var vp=$("#vp"),V={x:0,y:0,k:1},MINK=.05,MAXK=3;
 function apply(){stage.style.transform="translate("+V.x+"px,"+V.y+"px) scale("+V.k+")";
   var s=28*V.k;vp.style.backgroundSize=s+"px "+s+"px";vp.style.backgroundPosition=V.x+"px "+V.y+"px";
-  $("#pct").textContent=Math.round(V.k*100)+"% ▾"}
+  $("#pct").textContent=Math.round(V.k*100)+"% ▾";if(!$("#zlist").hidden)markCur()}
 function anim(fn){stage.classList.add("anim");fn();apply();setTimeout(function(){stage.classList.remove("anim")},520)}
 function zoomAt(f,cx,cy){var k=Math.min(MAXK,Math.max(MINK,V.k*f));f=k/V.k;V.x=cx-(cx-V.x)*f;V.y=cy-(cy-V.y)*f;V.k=k}
 function fit(box){box=box||{x:0,y:0,w:BW,h:BH};var r=vp.getBoundingClientRect(),pad=40;
@@ -327,8 +327,8 @@ $("#zout").onclick=function(){var r=vp.getBoundingClientRect();anim(function(){z
 $("#fit").onclick=function(){anim(function(){fit()})};
 var ZL=[10,25,50,75,100,150,200,300];
 $("#zlist").innerHTML=ZL.map(function(z){return'<li><button data-z="'+z+'">'+z+'%</button></li>'}).join("")+'<li><button data-z="fit">Вся схема</button></li>';
-function zmenu(open){var l=$("#zlist");l.hidden=!open;$("#pct").setAttribute("aria-expanded",open);
-  if(open){var cur=Math.round(V.k*100);Array.prototype.forEach.call(l.querySelectorAll("button"),function(b){b.classList.toggle("on",+b.dataset.z===cur)})}}
+function markCur(){var cur=Math.round(V.k*100);Array.prototype.forEach.call($("#zlist").querySelectorAll("button"),function(b){b.classList.toggle("on",+b.dataset.z===cur)})}
+function zmenu(open){$("#zlist").hidden=!open;$("#pct").setAttribute("aria-expanded",open);if(open)markCur()}
 $("#pct").onclick=function(e){e.stopPropagation();zmenu($("#zlist").hidden)};
 $("#zlist").onclick=function(e){var b=e.target.closest("button");if(!b)return;zmenu(false);
   if(b.dataset.z==="fit"){anim(function(){fit()});return}
