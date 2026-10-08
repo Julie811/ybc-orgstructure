@@ -35,6 +35,11 @@ h2,h4{font-family:var(--display);text-transform:uppercase;letter-spacing:.02em;f
 .res:hover{background:var(--surface-2)}.res span{color:var(--ink-muted);font-size:.8rem}
 .chips{flex:none;display:flex;gap:8px;padding:8px 16px;overflow-x:auto;background:var(--bg);border-bottom:1px solid var(--border);z-index:19;scrollbar-width:thin}
 .chip{flex:none;border:1.5px solid var(--border);background:var(--surface);border-radius:999px;padding:6px 14px;font:700 .78rem var(--body);min-height:36px}
+#cmenu{position:fixed;z-index:60;background:var(--surface);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:6px;display:flex;flex-direction:column;gap:2px;min-width:200px;max-height:70vh;overflow:auto}
+#cmenu button{border:0;background:none;text-align:left;border-radius:8px;padding:0 12px;min-height:38px;font:600 .9rem var(--body)}
+#cmenu button:hover{background:var(--accent-soft);color:var(--accent-strong)}
+#cmenu .all{border-bottom:1px solid var(--border);border-radius:8px 8px 0 0;color:var(--accent-strong);font-weight:700;margin-bottom:4px}
+.chip.on{border-color:var(--accent);color:var(--accent-strong)}
 .chip:hover{border-color:var(--accent);color:var(--accent-strong)}
 #vp{flex:1;position:relative;overflow:hidden;touch-action:none;cursor:grab;background-image:radial-gradient(var(--dots) 1.4px,transparent 1.5px);background-size:28px 28px}
 #vp.drag{cursor:grabbing}
@@ -354,13 +359,28 @@ vp.addEventListener("keydown",function(e){var t=e.target.closest(".node");if(t&&
 /* ---------- jump chips + search ---------- */
 function fly(n,whole){var r=vp.getBoundingClientRect();var box=whole?subBox(n):{x:n.x-120,y:n.y-60,w:W+240,h:n.h+120};
   anim(function(){fit(box);if(!whole){V.k=Math.min(V.k,1);V.x=r.width/2-(n.x+W/2)*V.k;V.y=r.height/2-(n.y+n.h/2)*V.k}})}
-var chipDefs=[["Вся схема",null],["Розгорнути все","open"],["Згорнути все","close"],["Central Services",central],["Філії",branches],["Франшизи",franch]].concat(central.ch.map(function(f){return[f.t,f]}));
-$("#chips").innerHTML=chipDefs.map(function(c,i){return'<button class="chip" data-c="'+i+'">'+esc(c[0])+'</button>'}).join("");
-$("#chips").onclick=function(e){var b=e.target.closest(".chip");if(!b)return;var d=chipDefs[b.dataset.c];
-  if(!d[1]){anim(function(){fit()});return}
-  if(d[1]==="open"||d[1]==="close"){setAll(d[1]==="open");render();anim(function(){fit()});return}
-  var n=d[1];if(n.k==="fn"){n.open=true;openUp(n)}else{(function o(m){if(m.k==="fn")m.open=true;m.ch.forEach(o)})(n)}
-  render();fly(n,true)};
+var chipDefs=[{l:"Вся схема",a:"fit"},{l:"Розгорнути все",a:"open"},{l:"Згорнути все",a:"close"},
+  {l:"Відділи",g:central,all:"Усі відділи"},{l:"Філії",g:branches,all:"Усі філії"},{l:"Франшайзінг",g:franch,all:"Усі франшизи"}];
+$("#chips").innerHTML=chipDefs.map(function(c,i){return'<button class="chip" data-c="'+i+'"'+(c.g?' aria-haspopup="true" aria-expanded="false"':'')+'>'+esc(c.l)+(c.g?' ▾':'')+'</button>'}).join("");
+var cm=document.createElement("div");cm.id="cmenu";cm.hidden=true;document.body.appendChild(cm);
+function closeCm(){cm.hidden=true;Array.prototype.forEach.call(document.querySelectorAll(".chip[aria-expanded]"),function(b){b.setAttribute("aria-expanded","false");b.classList.remove("on")})}
+function goTo(n,all){
+  if(all){(function o(m){if(m.k==="fn")m.open=true;m.ch.forEach(o)})(n)}else{n.open=true;openUp(n)}
+  render();fly(n,true)}
+$("#chips").onclick=function(e){var b=e.target.closest(".chip");if(!b)return;e.stopPropagation();var d=chipDefs[b.dataset.c];
+  if(d.g){var was=!cm.hidden&&cm.dataset.c===b.dataset.c;closeCm();if(was)return;
+    cm.dataset.c=b.dataset.c;
+    cm.innerHTML='<button class="all" data-i="all">'+esc(d.all)+'</button>'+d.g.ch.map(function(n,i){return'<button data-i="'+i+'">'+esc(n.t)+'</button>'}).join("");
+    var r=b.getBoundingClientRect();cm.style.left=Math.min(r.left,innerWidth-230)+"px";cm.style.top=(r.bottom+6)+"px";
+    cm.hidden=false;b.setAttribute("aria-expanded","true");b.classList.add("on");return}
+  closeCm();
+  if(d.a==="fit")anim(function(){fit()});
+  else{setAll(d.a==="open");render();anim(function(){fit()})}};
+cm.onclick=function(e){var b=e.target.closest("button");if(!b)return;var d=chipDefs[cm.dataset.c];closeCm();
+  if(b.dataset.i==="all")goTo(d.g,true);else goTo(d.g.ch[+b.dataset.i],false)};
+document.addEventListener("click",function(e){if(!e.target.closest("#cmenu"))closeCm()});
+$("#chips").addEventListener("scroll",closeCm);
+document.addEventListener("keydown",function(e){if(e.key==="Escape")closeCm()});
 
 var hitEl=null;
 $("#q").addEventListener("input",function(){var v=this.value.trim().toLowerCase(),box=$("#res");
