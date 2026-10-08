@@ -91,6 +91,10 @@ h2,h4{font-family:var(--display);text-transform:uppercase;letter-spacing:.02em;f
 .kg{list-style:none;margin-left:-1.3em;font:600 .78rem var(--body);text-transform:uppercase;letter-spacing:.08em;color:var(--ink-muted)}
 .person{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--border);font-size:.9rem;flex-wrap:wrap}
 .person span{color:var(--ink-muted)}.person .h{font-weight:600;font-size:.82rem;overflow-wrap:anywhere}
+.person{flex-direction:column;align-items:flex-start;gap:6px;padding:10px 0}
+.person .h{flex:none;max-width:100%}
+.tg-wrap{display:inline-flex;flex-direction:column;align-items:flex-start;gap:3px;max-width:100%}
+.tg-l{font:600 .64rem var(--body);letter-spacing:.09em;text-transform:uppercase;color:var(--ink-muted);padding-left:3px;opacity:.85}
 .tg-chip{display:inline-flex;align-items:center;gap:2px;max-width:100%;padding:3px 3px 3px 10px;border:1.5px solid var(--border);border-radius:10px;background:var(--surface-2)}
 .tg-t{font:600 .82rem var(--body);overflow-wrap:anywhere}
 .copy{flex:none;width:28px;height:28px;border:0;border-radius:7px;background:transparent;color:var(--ink-muted);display:grid;place-items:center}
@@ -403,7 +407,7 @@ $("#scrim").onclick=closeDrawer;
 document.addEventListener("keydown",function(e){if(e.key==="Escape"){closeDrawer();$("#res").hidden=true}});
 var COPY_SVG='<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8" rx="1.6"/><path d="M10.5 3.5v-.4a1.6 1.6 0 0 0-1.6-1.6H3.1a1.6 1.6 0 0 0-1.6 1.6v5.8a1.6 1.6 0 0 0 1.6 1.6h.4"/></svg>';
 var OK_SVG='<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>';
-function handleHtml(h){if(!h)return"";return'<span class="tg-chip"><span class="tg-t">'+esc(h)+'</span><button class="copy" type="button" data-copy="'+esc(h)+'" aria-label="Копіювати нік '+esc(h)+'" title="Копіювати">'+COPY_SVG+'</button></span>'}
+function handleHtml(h){if(!h)return"";return'<span class="tg-wrap"><span class="tg-l">Telegram</span><span class="tg-chip"><span class="tg-t">'+esc(h)+'</span><button class="copy" type="button" data-copy="'+esc(h)+'" aria-label="Копіювати нік '+esc(h)+'" title="Копіювати">'+COPY_SVG+'</button></span></span>'}
 function copyText(s,done){
   function fb(){var a=document.createElement("textarea");a.value=s;a.style.cssText="position:fixed;opacity:0";document.body.appendChild(a);a.select();try{document.execCommand("copy")}catch(e){}a.remove();done()}
   if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(s).then(done,fb)}else fb()}
