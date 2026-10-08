@@ -293,15 +293,15 @@ function orgNode(b,fr){var gs=groups(b).map(function(g){
     if(chief&&bm){chief.ch=[bm].concat(p2p?[p2p]:[]);gs=gs.filter(function(x){return x!==bm&&x!==p2p})}}
   return N("fn",b.n,pl(b.p.length),gs,{org:b,fr:fr})}
 var branches=N("hub","Філії",BR.length+" локацій",BR.map(function(b){return orgNode(b)}),{mode:"h"});
-var franch=N("hub","Франшизи","Незалежні клуби під брендом YBC",FR.map(function(b){return orgNode(b,1)}),{mode:"h",dy:240,gapBefore:240,info:"Незалежні клуби, які створили власні команди під ім'ям Young Business Club. Вони не входять до структури управління материнської компанії, у них немає керівника."});
+var franch=N("hub","Франшизи","Незалежні клуби під брендом YBC",FR.map(function(b){return orgNode(b,1)}),{mode:"h",info:"Незалежні клуби, які створили власні команди під ім'ям Young Business Club. Вони не входять до структури управління материнської компанії, у них немає керівника."});
 var P_OST={name:"Андрій Остапчук",pos:"Управляючий партнер",handle:"@ostapchuk19",where:"Central Services"};
 var P_TUZ={name:"Олена Туз",pos:"Управляючий партнер",handle:"@helentuz",where:"Central Services"};
 var P_YAN={name:"Яна Матвійчук",pos:"Акціонер",handle:"@YanaMatviychukARENACS",where:"Central Services"};
 var P_SMA={name:"Андрій Смаль",pos:"Акціонер",handle:"@CRMMaker",where:"Central Services"};
 var ostap=N("root","Андрій Остапчук","Управляючий партнер",[central,branches],{mode:"h",people:[P_OST]});
 var tuz=N("root","Олена Туз","Управляючий партнер",[salesFn,finFn],{mode:"h",people:[P_TUZ]});
-var owners=N("root","Акціонери","Яна Матвійчук · Андрій Смаль",[ostap,tuz],{mode:"h",people:[P_YAN,P_SMA]});
-var world=N("root","","",[owners,franch],{mode:"h",ghost:1,noEdge:1});
+var owners=N("root","Акціонери","Яна Матвійчук · Андрій Смаль",[ostap,tuz,franch],{mode:"h",people:[P_YAN,P_SMA]});
+var world=N("root","","",[owners],{mode:"h",ghost:1,noEdge:1});
 
 var W=224,HGAP=22,VGAP=48,IND=26,GAP=14;
 var Hs={root:72,hub:76,fn:70,role:76,person:60};
