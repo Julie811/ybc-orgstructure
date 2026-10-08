@@ -517,13 +517,13 @@ function roleHtml(r,generic){
   if(r.d.length)h+='<h4>Обов\'язки</h4>'+listHtml(r.d,"ol");else if(r.nodoc)h+='<div class="vacl">Опису обов\'язків у документі немає.</div>';
   if(r.k.length)h+='<h4>Показники ефективності</h4>'+listHtml(r.k,"ul");return h}
 function groupBoss(title,b){
-  if(b.fr)return"";
   function who(re,label){var xs=b.p.filter(function(y){return re.test(y[1])});return xs.length?label+" ("+xs.map(function(y){return y[0]}).join(", ")+")":""}
   if(/^(Partner|Акціонер|Співвласник)/.test(title))return"";
-  if(/^(CEO|COO)/.test(title))return who(/^Partner/,"Partner")||who(/^Акціонер/,"Акціонер");
+  function owners(){return b.fr?who(/^Акціонер/,"Акціонер"):[who(/^Partner/,"Partner"),who(/^Акціонер/,"Акціонер")].filter(Boolean).join(", ")}
+  if(/^(CEO|COO)/.test(title))return owners();
   if(title==="Chief of BM")return"Андрій Остапчук (Управляючий партнер)";
   if(/Business Manager|^BM/.test(title)){var c=who(/^Chief of BM/,"Chief of BM");if(c)return c;var h=who(/^Head of BM/,"Head of BM Online");if(h)return h}
-  return who(/^CEO/,"CEO")||who(/^COO/,"COO")||who(/^Акціонер/,"Акціонер")||"CEO локації"}
+  return who(/^CEO/,"CEO")||who(/^COO/,"COO")||owners()||(b.fr?"":"CEO локації")}
 function personCard(p){
   var r=p.role||roleFor(p.pos);var boss=p.org?groupBoss(p.pos,p.org):(p.role?p.role.b:"");
   var h='<div class="fnlab">Людина</div><h2>'+esc(p.name)+'</h2><dl class="meta"><dt>Посада</dt><dd>'+(findRole(p.pos)?'<button type="button" class="poslink" data-pos="'+esc(p.pos)+'" title="Відкрити опис посади">'+esc(p.pos)+'</button>':esc(p.pos))+'</dd><dt>Локація</dt><dd>'+esc(p.where)+'</dd>'+(p.dep?'<dt>Відділ</dt><dd>'+esc(p.dep)+'</dd>':'')+(boss?'<dt>Керівник</dt><dd>'+esc(boss)+'</dd>':'')+'</dl>'+(p.handle?'<div class="pc-h">'+handleHtml(p.handle)+'</div>':'<div class="vacl">Telegram не вказано</div>')+
