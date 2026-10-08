@@ -238,7 +238,7 @@ var BR=[
 {n:"Одеса",f:"🇺🇦",p:[["Соловйов Євген","Акціонер","@ceo_seagate"],["Сасова Ганна","Event Manager","@annasasov"],["Ксенія Яцюк","Business Manager","@ksuyatsuk"],["Оксана Немцева","Business Manager","@nemtsevaoksana"]]},
 {n:"Дніпро",f:"🇺🇦",p:[["Вероніка Шевінонова","CEO","@Veronika_Shevinonova"],["Вероніка Кравчук","Комʼюніті менеджер","@Verona_Kr"]]},
 {n:"Варшава",f:"🇵🇱",p:[["Баршівський Андрій","COO","@a_barshivskyi"],["Кравченко Владислава","Sales Manager","@vladisslava_kr_ybc"],["Квасюк Юлія","Event Manager","@ykvasyuk"],["Стьоба Олена","Business Manager","@businessmanagerYBC"],["Стратійчук Юлія","Business Manager","@julia_stratiichuk"],["Сібілєва Марина","SMM","@hharise"]]},
-{n:"Вроцлав",f:"🇵🇱",p:[["Чічкань Максим","CEO, Partner","@Maks_YBC"],["Нечипуренко Тетяна","Business Manager","@Tetiana_Nech_YBC"],["Олеся Скалозуб","Business Manager","@Olesia_YBC"],["Олена Кравчук","SMM","@Olenka_Krav"]]},
+{n:"Вроцлав",f:"🇵🇱",p:[["Чічкань Максим","CEO","@Maks_YBC"],["Нечипуренко Тетяна","Business Manager","@Tetiana_Nech_YBC"],["Олеся Скалозуб","Business Manager","@Olesia_YBC"],["Олена Кравчук","SMM","@Olenka_Krav"]]},
 {n:"Лісабон",f:"🇵🇹",p:[["Воробйова Іріна","CEO","@IrinaVorobiova"],["Вікторія Пона","Комʼюніті менеджер","@victoriapona"]]},
 {n:"Онлайн",f:"",note:"Онлайн-філія для міст, де немає фізичного клубу.",p:[["Самородова Діана","Head of BM Online","@diana_yurkevich"],["Семілєтова Евеліна","Business Manager","@evelinasem"],["Єремеєва Катерина","Business Manager","@Katyaeremeevaaa"]]}
 ];
@@ -311,6 +311,9 @@ function orgNode(b,fr){var gs=groups(b).map(function(g){
   if(b.n==="Київ"){var chief=gs.filter(function(x){return x.t==="Chief of BM"})[0],bm=gs.filter(function(x){return x.t==="Business Manager"})[0];
     var p2p=gs.filter(function(x){return x.t==="BM / P2P Manager"})[0];
     if(chief&&bm){chief.ch=[bm].concat(p2p?[p2p]:[]);gs=gs.filter(function(x){return x!==bm&&x!==p2p})}}
+  if(!fr){var isHead=function(x){return x.t==="CEO"||/^COO/.test(x.t)},isOwner=function(x){return/^(Partner|Акціонер|Співвласник)/.test(x.t)};
+    var head=gs.filter(isHead)[0];
+    if(head){head.ch=head.ch.concat(gs.filter(function(x){return x!==head&&!isOwner(x)}));gs=gs.filter(function(x){return x===head||isOwner(x)})}}
   return N("fn",b.n,pl(b.p.length),gs,{org:b,fr:fr})}
 var branches=N("hub","Філії",BR.length+" локацій",BR.map(function(b){return orgNode(b)}),{mode:"h"});
 var franch=N("hub","Франшизи","",FR.map(function(b){return orgNode(b,1)}),{mode:"h"});
