@@ -43,6 +43,7 @@ h2,h4{font-family:var(--display);text-transform:uppercase;letter-spacing:.02em;f
 #cmenu button:hover{background:var(--accent-soft);color:var(--accent-strong)}
 #cmenu .all{border-bottom:1px solid var(--border);border-radius:8px 8px 0 0;color:var(--accent-strong);font-weight:700;margin-bottom:4px}
 .chip.on{border-color:var(--accent);color:var(--accent-strong)}
+.chip-link{display:inline-flex;align-items:center;text-decoration:none;color:var(--ink);margin-left:auto}
 .chip:hover{border-color:var(--accent);color:var(--accent-strong)}
 #vp{flex:1;position:relative;overflow:hidden;touch-action:none;cursor:grab}
 #vp.drag{cursor:grabbing}
@@ -162,7 +163,7 @@ var FN=[
  {t:"Sales Manager",m:"Продати максимальну кількість абонементів у клуб гідним підприємцям згідно з планами продажів.",b:"Head of Sales",l:"Central Services",p:["Богдановський Святослав|@SviatoslavYBC","Доля Єлизавета|@elizavetadolia","Седлецький Іван|@Sedletskyi_Ivan","Кравченко Владислав|@vladisslava_kr_ybc|Варшава"],
   d:["Кваліфікація та виявлення потреб нового клієнта","Проведення One-to-One з потенційним учасником","Проведення Ланчу / Мастермайнду","Закриття на угоду","Актуалізація КУС","Купівля квитків не через додаток","Додавання реквізитів на оплату в картку нового учасника (Zoho CRM)","Додавання потенційних учасників в чати івенту (додаток)","Якісне ведення CRM згідно з інструкцією","Щоденні звіти Head of Sales"],
   k:["Виконання особистого плану продажів","Особиста норма конверсії з цільового ліда в покупку","Кількість розподілених лідів","Кількість опрацьованих підходящих лідів","Кількість дзвінків загальна і в базу","Успішні дзвінки (довше 30 сек)","Призначені та проведені one-to-one","Кількість учасників на ланчах","Нові «Одобрені Клубом»","Отримані внески (угоди)"]},
- {t:"Асистент керівника продажів",m:"Забезпечувати організаційну та операційну підтримку керівника відділу продажів, допомагати команді виконувати план продажів і підтримувати якісну комунікацію з потенційними та чинними учасниками бізнес-клубу.",b:"Head of Sales",l:"Відділ продажів (YBC)",p:["Демченко Алла|@DemchenkoAlla"],
+ {t:"Асистент керівника продажів",m:"Забезпечувати організаційну та операційну підтримку керівника відділу продажів, допомагати команді виконувати план продажів і підтримувати якісну комунікацію з потенційними та чинними учасниками бізнес-клубу.",b:"Head of Sales",l:"Central Services",p:["Демченко Алла|@DemchenkoAlla"],
   d:["#Підтримка керівника","Ведення календаря, планування зустрічей і дзвінків","Підготовка інформації, звітів та аналітики","Контроль виконання поставлених команді задач","Організація внутрішніх зустрічей та планерок","Фіксація домовленостей і контроль їх виконання","#Робота з CRM та продажами","Внесення та актуалізація даних про лідів і клієнтів у CRM","Контроль руху потенційних учасників по етапах воронки","Перевірка коректності роботи менеджерів у CRM","Формування щоденних/щотижневих звітів щодо продажів","Контроль пропущених контактів, прострочених задач та follow-up","#Аналітика та контроль показників","Збір даних щодо кількості лідів, зустрічей, конверсій та продажів","Підготовка звітності для керівника","Моніторинг виконання KPI менеджерами","Виявлення проблемних етапів у воронці продажів","Підготовка пропозицій щодо покращення процесів","#Адміністративна підтримка","Робота з Google Sheets/Excel, CRM, месенджерами та іншими робочими системами","Підготовка документів, презентацій та внутрішніх матеріалів","Координація взаємодії відділу продажів з маркетингом, івент-відділом та ком\u2019юніті","Виконання оперативних доручень керівника"],
   k:["#Щоденні","Своєчасність та якість ведення CRM","Відсутність \"загублених\" або необроблених лідів","#Щотижневі","Кількість оброблених та кваліфікованих лідів","Відсоток призначених і проведених зустрічей","Конверсія лідів у зустрічі/продажі","Своєчасність звітності","#Щомісячні","Виконання командою плану продажів"]}]},{id:"event",t:"Event",roles:[
  {t:"Event Manager",m:"Створювати унікальні заходи, що дають якісні знайомства, надихають на масштабні досягнення та розвивають бізнес-спільноту.",b:"CEO локації",l:"не вказано в документі",p:["__EVENT__"],
@@ -203,7 +204,7 @@ var FN=[
  {t:"Економіст",m:"Планування витрат, доходів і прибутків, оптимізація витрат, підвищення рентабельності, аналітичні звіти для керівництва.",b:"CFO",l:"Central Services",p:["Іващенко Андрій|@AndriiIvashchenko"],
   d:["Бюджетування на рік у розрізі підрозділів","Коригування бюджетів","Контроль формування заявок","Формування реєстру платежів","План/факторний аналіз","Формування зарплатної відомості","Звіт по виручці у додатках та її нарахування в обліковій системі"],
   k:["Бюджет на 2026 рік затверджений до 10.12.2025","Витрати підрозділів у межах бюджету","Контроль CEO щодо таблиці по зарплаті до 3-го числа","Зарплатна відомість без помилок до 5-го числа"]}]},
-{id:"ops",t:"Операційна функція",roles:[
+{id:"ops",t:"Операційний відділ",roles:[
  {t:"Корпоративний секретар",m:"Безперебійна й ефективна комунікація, організація та інформаційний супровід внутрішніх процесів компанії.",b:"Управляючі партнери материнської компанії",l:"Central Services",p:["Гузь Марія|@Maria_YBC","Владислав Якимишен|@walomua_ybc"],
   d:["Створення та внесення зустрічей в календар","Протоколювання зустрічей та внесення протоколів у Notion","Внесення звітності та контроль у Notion","Організація зйомок та передача відео до відеомейкера","Відправка звітності відділу продажів","Авіаквитки та готелі для керівника","Інвойси та компенсації в ApprovalMax","Повідомлення про продовження учасників філії Київ","Повідомлення про результати місяця/кварталу/року по функціях","Інвойси Notion до бухгалтера","Доступи в Notion, видалення звільнених з чатів","Створення чатів у Telegram","Оцифровка текстів та формування документів","Запис зустрічей, завантаження в Zoho за потреби","Присутність на зустрічах по продовженню учасників Києва","Нагадування про зустрічі: разові, щотижневі, щомісячні, щоквартальні"],
   k:["100% зустрічей вчасно, з протоколами, без конфліктів","Notion оновлюється щонайменше раз на тиждень","Керівник отримує потрібну інформацію вчасно"]},
@@ -213,12 +214,12 @@ var FN=[
  {t:"Community Manager",m:"Стабільна, передбачувана й ефективна операційна система в трьох напрямках: івенти, робота з діючими учасниками та пошук нових.",b:"CEO / Управляючий філії",l:"Лісабон, Люксембург",p:["Вікторія Пона|@victoriapona|Лісабон","Смілик Вероніка|@veronika_smilyk_ybc|Люксембург"],
   d:["#Івенти","Пошук і бронювання локацій","Опис і анонс заходів в додатку, чатах, каналі та Instagram","Збір фідбеків від підрядників, спікерів і учасників","#Маркетинг, PR","Анонси івентів у каналі, Instagram, додатках і пабліках","#Продажі","Кваліфікація лідів, робота з базою, ведення потенційного учасника в CRM","#БМ","Адаптація нових учасників, моніторинг чатів, one-to-one з діючими учасниками","Контроль конекту і ННН, привітання, запрошення на івент, відвідуваність","#P2P","Планування зустрічей, робота з модераторами, нові групи і заклади, відгуки, звітність для CEO","#Фінанси","Інвойси та компенсації в ApprovalMax"],
   k:["Утримання рівня продовження не менше 75%","Ведення 50+ учасників"],list:1},
- {t:"Franchise Manager",m:"Забезпечувати успішний запуск, розвиток та масштабування франчайзингових філій Young Business Club через системний супровід франчайзі, передачу стандартів клубу та допомогу у досягненні бізнес-результатів.",b:"Управляючий партнер",l:"Франшиза YBC",p:["Марія Усенко|@usenkomaria_ybc"],
+ {t:"Franchise Manager",m:"Забезпечувати успішний запуск, розвиток та масштабування франчайзингових філій Young Business Club через системний супровід франчайзі, передачу стандартів клубу та допомогу у досягненні бізнес-результатів.",b:"Управляючий партнер",l:"Central Services",p:["Марія Усенко|@usenkomaria_ybc"],
   d:["Підготовка документів для франчайзі","Онбординг та адаптація франчайзі (супровід запуску філії)","Виявлення цілей розвитку філії з планом на рік, квартал, місяць","Проведення щоденного One-to-One","Проведення щотижневого One-to-One","Проведення опитування \"Рівень задоволеності\""],
   k:["#Щоденні","Закрито 100% запитів від партнерів","#Щотижневі","Проведено 100% 1:1 з франшизами","#Щоквартальні","Рівень задоволеності франчайзі (NPS) - не менше 9 з 10"]},
- {t:"Асистент проєкту \"Біблія Підприємця\"",m:"Забезпечувати організаційну, комунікаційну та операційну підтримку проєкту \"Біблія підприємця\", допомагаючи реалізовувати контентні, івентні та освітні напрямки проєкту.",b:"Проджект менеджер",l:"YBC",p:["Брацлавська Софія|@sbratslavska"],
+ {t:"Асистент проєкту \"Біблія Підприємця\"",m:"Забезпечувати організаційну, комунікаційну та операційну підтримку проєкту \"Біблія підприємця\", допомагаючи реалізовувати контентні, івентні та освітні напрямки проєкту.",b:"Проджект менеджер",l:"Central Services",p:["Брацлавська Софія|@sbratslavska"],
   d:["Пошук та комунікація зі школами, дитсадочками, дитячими будинками та освітніми організаціями","Організація передачі та відправки книг у навчальні й соціальні заклади","Пошук можливостей для популяризації \"Біблії підприємця\"","Ведення та публікація контенту проєкту в соціальних мережах","Допомога в організації презентації книги (івент)","Присутність на офлайн-заходах для представлення і продажу книг","Виконання поточних організаційних задач проєкту"],
-  k:["#Щотижневі","100% задач виконано вчасно","Виконання затвердженого контент-плану - не менше 90%","#Щомісячні","Кількість нових контактів/домовленостей/переданих книг щомісяця"]}]},{id:"legal",t:"Юридична функція",roles:[
+  k:["#Щотижневі","100% задач виконано вчасно","Виконання затвердженого контент-плану - не менше 90%","#Щомісячні","Кількість нових контактів/домовленостей/переданих книг щомісяця"]}]},{id:"legal",t:"Юридичний відділ",roles:[
  {t:"Юрист",m:"Законність, захист прав і законних інтересів ТОВ «ЯБК» через професійне застосування правових знань.",b:"Управляючі партнери материнської компанії",l:"Central Services",p:["Хандога Іріна|@IrinaKhandoga"],
   d:["Договірна діяльність: створення або експертиза договорів, узгодження","Претензійно-позовна робота: позиція, досудове врегулювання, позови, засідання, виконавче провадження","Корпоративна підтримка: порядок денний ЗЗУ, протоколи, рішення, зміни керівника, місцезнаходження, учасників","Внутрішні й зовнішні документи, скарги, пояснення, запити, відповіді","Консультаційна підтримка: норми, ризики, висновки, зразки документів","Моніторинг законодавства, судової практики та ризиків"],
   k:["Кількість опрацьованих договорів","Успішні реєстрації/зміни у ЄДР, актуальність статутних документів","Кількість консультацій","Дотримання строків","Відсутність серйозних правових втрат, штрафів, репутаційних ризиків"]}]}
@@ -292,8 +293,8 @@ var salesFn=fnNode("Продажі",roleNode("Head of Sales",[roleNode("Sales Ma
 var itFn=fnNode("IT",roleNode("Head of IT",[roleNode("Zoho Developer"),roleNode("IT Support")]));
 var hrFn=fnNode("HR",roleNode("Head of HR",[roleNode("Recruiter")]));
 var finFn=fnNode("Фінанси",roleNode("CFO",[roleNode("Головний бухгалтер",[roleNode("Бухгалтер")]),roleNode("Фінансист"),roleNode("Економіст")]));
-var opsFn=N("fn","Операційна функція","",[roleNode("Корпоративний секретар"),roleNode("Franchise Manager"),roleNode("Асистент проєкту")]);
-var legalFn=fnNode("Юридична функція",roleNode("Юрист"));
+var opsFn=N("fn","Операційний відділ","",[roleNode("Корпоративний секретар"),roleNode("Franchise Manager"),roleNode("Асистент проєкту")]);
+var legalFn=fnNode("Юридичний відділ",roleNode("Юрист"));
 var central=N("hub","Central Services","Материнська компанія",[salesFn,finFn,mktFn,itFn,hrFn,opsFn,legalFn],{mode:"h",junction:null});
 salesFn.noParentEdge=true;finFn.noParentEdge=true;
 var ALLFN=[mktFn,salesFn,itFn,hrFn,finFn,opsFn,legalFn];
@@ -415,13 +416,13 @@ function fly(n,whole){var r=vp.getBoundingClientRect();var box=whole?subBox(n):{
   anim(function(){fit(box);if(!whole){V.k=Math.min(V.k,1);V.x=r.width/2-(n.x+W/2)*V.k;V.y=r.height/2-(n.y+n.h/2)*V.k}})}
 var chipDefs=[{l:"Вся схема",a:"fit"},{l:"Розгорнути все",a:"open"},{l:"Згорнути все",a:"close"},
   {l:"Відділи",items:ALLFN,all:"Усі відділи"},{l:"Філії",items:branches.ch,hub:branches,all:"Усі філії"},{l:"Франшайзінг",items:franch.ch,hub:franch,all:"Усі франшизи"}];
-$("#chips").innerHTML=chipDefs.map(function(c,i){return'<button class="chip" data-c="'+i+'"'+(c.items?' aria-haspopup="true" aria-expanded="false"':'')+'>'+esc(c.l)+(c.items?' ▾':'')+'</button>'}).join("");
+$("#chips").innerHTML=chipDefs.map(function(c,i){return'<button class="chip" data-c="'+i+'"'+(c.items?' aria-haspopup="true" aria-expanded="false"':'')+'>'+esc(c.l)+(c.items?' ▾':'')+'</button>'}).join("")+'<a class="chip chip-link" href="https://app.notion.com/p/34ea2ff374c280299d9ac87773ecca58?source=copy_link" target="_blank" rel="noopener noreferrer">Документ у Notion ↗</a>';
 var cm=document.createElement("div");cm.id="cmenu";cm.hidden=true;document.body.appendChild(cm);
 function closeCm(){cm.hidden=true;Array.prototype.forEach.call(document.querySelectorAll(".chip[aria-expanded]"),function(b){b.setAttribute("aria-expanded","false");b.classList.remove("on")})}
 function goTo(n,all){
   if(all){(function o(m){if(m.k==="fn")m.open=true;m.ch.forEach(o)})(n)}else{n.open=true;openUp(n)}
   render();fly(n,true)}
-$("#chips").onclick=function(e){var b=e.target.closest(".chip");if(!b)return;e.stopPropagation();var d=chipDefs[b.dataset.c];
+$("#chips").onclick=function(e){var b=e.target.closest(".chip");if(!b||b.tagName==="A")return;e.stopPropagation();var d=chipDefs[b.dataset.c];
   if(d.items){var was=!cm.hidden&&cm.dataset.c===b.dataset.c;closeCm();if(was)return;
     cm.dataset.c=b.dataset.c;
     cm.innerHTML='<button class="all" data-i="all">'+esc(d.all)+'</button>'+d.items.map(function(n,i){return'<button data-i="'+i+'">'+esc(n.t)+'</button>'}).join("");
@@ -443,9 +444,9 @@ var PIDX=[];
 function addP(p){var k=(p.name+"|"+p.handle+"|"+p.pos).toLowerCase();if(PIDX.some(function(x){return x.k===k}))return;p.k=k;PIDX.push(p)}
 NODES.forEach(function(n){if(n.people)n.people.forEach(function(p){addP({name:p.name,pos:p.pos,where:p.where,handle:p.handle,node:n})});
   if(n.grp)n.grp.people.forEach(function(x){addP({name:x[0],pos:x[1],where:n.org.n,handle:x[2],node:n,org:n.org})})});
-NODES.forEach(function(n){if(n.role&&!n.grp)n.role.p.forEach(function(s){var a=s.split("|");addP({name:a[0],pos:n.role.t.replace(/ \(Online\)/,"").replace(/ · .*/,""),where:"Central Services · "+fnOf(n),handle:a[1],node:n,role:n.role})})});
+NODES.forEach(function(n){if(n.role&&!n.grp)n.role.p.forEach(function(s){var a=s.split("|");addP({name:a[0],pos:n.role.t.replace(/ \(Online\)/,"").replace(/ · .*/,""),where:"Central Services",dep:fnOf(n),handle:a[1],node:n,role:n.role})})});
 var EN={"Київ":"Kyiv","Львів":"Lviv","Харків":"Kharkiv","Одеса":"Odesa","Дніпро":"Dnipro","Варшава":"Warsaw","Вроцлав":"Wroclaw","Лісабон":"Lisbon","Онлайн":"Online"};
-PIDX.forEach(function(p){p.where2=p.where+" "+(EN[p.where]||"")});
+PIDX.forEach(function(p){p.where2=p.where+" "+(p.dep||"")+" "+(EN[p.where]||"")});
 function words(s){return s.toLowerCase().split(/[\s·,()\/@_.\-]+/).filter(Boolean)}
 function score(p,toks){var nw=words(p.name),aw=words(p.name+" "+p.pos+" "+p.where2+" "+p.handle),full=(p.name+" "+p.pos+" "+p.where2+" "+p.handle).toLowerCase(),s=0;
   for(var i=0;i<toks.length;i++){var q=toks[i];
@@ -460,7 +461,7 @@ $("#q").addEventListener("input",function(){var v=this.value.trim().toLowerCase(
   var pm=PIDX.map(function(p){return{p:p,s:score(p,toks)}}).filter(function(x){return x.s>0}).sort(function(a,b){return b.s-a.s||a.p.name.localeCompare(b.p.name,"uk")}).slice(0,8).map(function(x){return x.p});
   var nm2=v.length<2?[]:NODES.filter(function(n){return!n.ghost&&n.k!=="root"&&!n.grp&&(n.t+" "+(EN[n.t]||"")+" "+n.s).toLowerCase().indexOf(v)>-1}).slice(0,4);
   box.innerHTML=(pm.length||nm2.length)?
-    pm.map(function(p,i){return'<button class="res" data-p="'+i+'"><b>'+esc(p.name)+'</b><span>'+esc(p.pos)+' · '+esc(p.where)+'</span><span class="h">'+esc(p.handle||"")+'</span></button>'}).join("")+
+    pm.map(function(p,i){return'<button class="res" data-p="'+i+'"><b>'+esc(p.name)+'</b><span>'+esc(p.pos)+' · '+esc(p.dep||p.where)+'</span><span class="h">'+esc(p.handle||"")+'</span></button>'}).join("")+
     nm2.map(function(n,i){return'<button class="res" data-n="'+i+'"><b>'+esc(n.t)+'</b><span>'+esc(n.k==="fn"?(n.org?(n.fr?"Франшиза":"Філія"):"Відділ"):"Посада")+' · '+esc(n.s)+'</span></button>'}).join("")
     :'<div class="vacl" style="padding:10px">Нічого не знайдено</div>';
   box.hidden=false;
@@ -486,9 +487,9 @@ function listHtml(a,cls){var h="",open=false;
     else{if(!open){h+="<"+cls+">";open=true}h+="<li>"+esc(x)+"</li>"}});
   if(open)h+="</"+cls+">";return h}
 function roleHtml(r,generic){
-  var h='<div class="fnlab">'+esc(generic?"Опис посади":r.fn)+'</div><h2>'+esc(r.t)+'</h2>';
+  var h='<div class="fnlab">'+(generic?"Опис посади":"Посада")+'</div><h2>'+esc(r.t)+'</h2>';
   if(r.m)h+='<div class="mission"><b>Місія</b>'+esc(r.m)+'</div>';
-  h+='<dl class="meta"><dt>Керівник</dt><dd>'+esc(r.b)+'</dd><dt>Локація</dt><dd>'+esc(r.l)+'</dd></dl>';
+  h+='<dl class="meta"><dt>Керівник</dt><dd>'+esc(r.b)+'</dd><dt>Локація</dt><dd>'+esc(r.l)+'</dd>'+(r.fn?'<dt>Відділ</dt><dd>'+esc(r.fn)+'</dd>':'')+'</dl>';
   if(!generic)h+='<h4>Хто на посаді · '+r.p.length+'</h4>';
   if(!generic)h+=r.p.length?r.p.map(function(s){var a=s.split("|");return'<div class="person"><div><b>'+esc(a[0])+'</b></div><div class="h">'+handleHtml(a[1])+'</div>'+(a[2]?'<span class="where">'+esc(a[2])+'</span>':'')+'</div>'}).join(""):'<div class="vacl">У документі людину не вказано.</div>';
   if(r.d.length)h+='<h4>Обов\'язки</h4>'+listHtml(r.d,"ol");else if(r.nodoc)h+='<div class="vacl">Опису обов\'язків у документі немає.</div>';
@@ -502,7 +503,7 @@ function groupBoss(title,b){
   return who(/^CEO/,"CEO")||who(/^COO/,"COO")||"CEO локації"}
 function personCard(p){
   var r=p.role||roleFor(p.pos);var boss=p.org?groupBoss(p.pos,p.org):(p.role?p.role.b:"");
-  var h='<div class="fnlab">'+esc(p.where)+'</div><h2>'+esc(p.name)+'</h2><dl class="meta"><dt>Посада</dt><dd>'+esc(p.pos)+'</dd><dt>Локація</dt><dd>'+esc(p.where)+'</dd>'+(boss?'<dt>Керівник</dt><dd>'+esc(boss)+'</dd>':'')+'</dl>'+(p.handle?'<div class="pc-h">'+handleHtml(p.handle)+'</div>':'<div class="vacl">Telegram не вказано</div>')+
+  var h='<div class="fnlab">Людина</div><h2>'+esc(p.name)+'</h2><dl class="meta"><dt>Посада</dt><dd>'+esc(p.pos)+'</dd><dt>Локація</dt><dd>'+esc(p.where)+'</dd>'+(p.dep?'<dt>Відділ</dt><dd>'+esc(p.dep)+'</dd>':'')+(boss?'<dt>Керівник</dt><dd>'+esc(boss)+'</dd>':'')+'</dl>'+(p.handle?'<div class="pc-h">'+handleHtml(p.handle)+'</div>':'<div class="vacl">Telegram не вказано</div>')+
     '<div class="btnrow"><button class="btn solid" id="pc-show">Показати на схемі</button>'+(r&&r!==p.role?'<button class="btn" id="pc-role">Опис посади</button>':(r?'<button class="btn" id="pc-role">Обов\'язки та KPI</button>':''))+'</div>';
   return h}
 function openPerson(p){
@@ -517,7 +518,7 @@ function rootDrawer(n){
   if(n.people)return rootDrawer(n);
   if(n.role)return openDrawer(roleHtml(n.role));
   if(n.grp){var g=n.grp,r=roleFor(g.t),bs=groupBoss(g.t,n.org);
-    openDrawer('<div class="fnlab">'+esc(n.org.n)+'</div><h2>'+esc(g.t)+'</h2>'+(bs?'<dl class="meta"><dt>Керівник</dt><dd>'+esc(bs)+'</dd></dl>':'')+'<h4>Хто на посаді · '+g.people.length+'</h4>'+g.people.map(personRow).join("")+(r?'<button class="btn" id="rb">Опис посади «'+esc(r.t)+'»</button>':''));
+    openDrawer('<div class="fnlab">Посада</div><h2>'+esc(g.t)+'</h2><dl class="meta"><dt>Локація</dt><dd>'+esc(n.org.n)+'</dd>'+(bs?'<dt>Керівник</dt><dd>'+esc(bs)+'</dd>':'')+'</dl>'+'<h4>Хто на посаді · '+g.people.length+'</h4>'+g.people.map(personRow).join("")+(r?'<button class="btn" id="rb">Опис посади «'+esc(r.t)+'»</button>':''));
     if(r)$("#rb").onclick=function(){openDrawer(roleHtml(r,true))};return}
   if(n.org){var b=n.org;openDrawer('<div class="fnlab">'+(n.fr?'Франшиза':'Філія')+'</div><h2>'+esc(b.n)+'</h2>'+(b.note?'<div class="mission">'+esc(b.note)+'</div>':'')+'<h4>Команда · '+b.p.length+'</h4>'+b.p.map(personRow).join(""));return}
   if(n.k==="fn")return fnDrawer(n);
