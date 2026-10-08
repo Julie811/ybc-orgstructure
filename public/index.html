@@ -336,8 +336,8 @@ var world=N("root","","",[owners],{mode:"h",ghost:1,noEdge:1});
 var W=224,HGAP=22,VGAP=48,IND=26,GAP=14;
 var Hs={root:72,hub:76,fn:70,role:76,person:60};
 (function init(n,p){n.par=p;n.ch.forEach(function(c){init(c,n)})})(world,null);
-function cnt(n){var c=(n.role||n.grp)?1:0;n.ch.forEach(function(x){c+=cnt(x)});return c}
-NODES.forEach(function(n){if(n.k==="fn"){n.open=false;if(!n.org){var c=cnt(n);n.s=c+" "+(c===1?"посада":c<5?"посади":"посад")}}});
+function cnt(n){var c=n.role?n.role.p.length:n.grp?n.grp.people.length:0;n.ch.forEach(function(x){c+=cnt(x)});return c}
+NODES.forEach(function(n){if(n.k==="fn"){n.open=false;if(!n.org)n.s=pl(cnt(n))}});
 function kids(n){return n.k==="fn"&&!n.open?[]:n.ch}
 function measure(n){n.w=W;n.h=Hs[n.k];var ch=kids(n);
   ch.forEach(measure);var nf=ch.filter(function(c){return!c.float});
