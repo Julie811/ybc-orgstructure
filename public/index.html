@@ -257,7 +257,7 @@ function orgNode(b,fr){var gs=groups(b).map(function(g){
   if(b.n==="Kyiv"){var chief=gs.filter(function(x){return x.t==="Chief of BM"})[0],bm=gs.filter(function(x){return x.t==="Business Manager"})[0];
     var p2p=gs.filter(function(x){return x.t==="BM / P2P Manager"})[0];
     if(chief&&bm){chief.ch=[bm].concat(p2p?[p2p]:[]);gs=gs.filter(function(x){return x!==bm&&x!==p2p})}}
-  return N("fn",b.n+(b.f?" "+b.f:""),pl(b.p.length),gs,{org:b,fr:fr})}
+  return N("fn",b.n,pl(b.p.length),gs,{org:b,fr:fr})}
 var branches=N("hub","Філії","8 локацій",BR.map(function(b){return orgNode(b)}),{mode:"h"});
 var franch=N("hub","Франшизи","3 партнерські клуби",FR.map(function(b){return orgNode(b,1)}),{mode:"h"});
 var root=N("root","Управляючі партнери","Андрій Остапчук · Олена Туз",[N("hub","","",[],{ghost:1})],{mode:"h"});
@@ -379,7 +379,7 @@ function openNode(n){
   if(n.grp){var g=n.grp,r=roleFor(g.t);
     openDrawer('<div class="fnlab">'+esc(n.org.n)+'</div><h2>'+esc(g.t)+'</h2><h4>Хто на посаді · '+g.people.length+'</h4>'+g.people.map(personRow).join("")+(r?'<button class="btn" id="rb">Опис посади «'+esc(r.t)+'»</button>':''));
     if(r)$("#rb").onclick=function(){openDrawer(roleHtml(r,true))};return}
-  if(n.org){var b=n.org;openDrawer('<div class="fnlab">'+(n.fr?'Франшиза':'Філія')+'</div><h2>'+esc(b.n)+(b.f?' '+b.f:'')+'</h2>'+(b.note?'<div class="mission">'+esc(b.note)+'</div>':'')+'<h4>Команда · '+b.p.length+'</h4>'+b.p.map(personRow).join(""));return}
+  if(n.org){var b=n.org;openDrawer('<div class="fnlab">'+(n.fr?'Франшиза':'Філія')+'</div><h2>'+esc(b.n)+'</h2>'+(b.note?'<div class="mission">'+esc(b.note)+'</div>':'')+'<h4>Команда · '+b.p.length+'</h4>'+b.p.map(personRow).join(""));return}
   if(n.k==="fn")return toggle(n);
   if(n.k==="hub")fly(n,true)}
 
