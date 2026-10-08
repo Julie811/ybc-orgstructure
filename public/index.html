@@ -63,7 +63,8 @@ h2,h4{font-family:var(--display);text-transform:uppercase;letter-spacing:.02em;f
 .node.person{background:var(--surface-2);box-shadow:none}
 .node.person b{font-weight:700;font-size:.86rem}
 .node.vac span{font-style:italic}
-.node .tg{position:absolute;right:9px;top:50%;transform:translateY(-50%);width:22px;height:22px;border-radius:50%;background:var(--accent);color:#fff;font:700 1rem/22px var(--body);text-align:center;font-style:normal}
+.node .tg{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:28px;height:28px;border-radius:50%;border:0;padding:0;background:var(--accent);color:#fff;font:700 1.1rem/28px var(--body);text-align:center;cursor:pointer}
+.node .tg:hover{background:var(--accent-strong);box-shadow:0 0 0 4px var(--accent-soft)}
 .node.fn{padding-right:38px}
 .node.hit{outline:3px solid var(--accent);outline-offset:3px}
 .dock{position:absolute;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));display:flex;align-items:center;gap:2px;padding:4px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);z-index:10}
@@ -99,7 +100,9 @@ h2,h4{font-family:var(--display);text-transform:uppercase;letter-spacing:.02em;f
 .tg-t{font:600 .82rem var(--body);overflow-wrap:anywhere}
 .copy{flex:none;width:28px;height:28px;border:0;border-radius:7px;background:transparent;color:var(--ink-muted);display:grid;place-items:center}
 .copy:hover{background:var(--surface);color:var(--ink)}
-.copy.done{color:var(--accent-strong)}.person .where{flex-basis:100%;font-size:.78rem}
+.copy.done{color:var(--accent-strong)}.rrow{display:flex;justify-content:space-between;align-items:center;gap:12px;width:100%;text-align:left;background:var(--surface-2);border:1px solid transparent;border-radius:10px;padding:10px 12px;margin-bottom:6px;min-height:44px}
+.rrow:hover{border-color:var(--accent)}.rrow span{color:var(--ink-muted);font-size:.82rem;white-space:nowrap}
+.person .where{flex-basis:100%;font-size:.78rem}
 .vacl{color:var(--ink-muted);font-size:.88rem;font-style:italic}
 .btn{margin-top:14px;min-height:44px;border:1.5px solid var(--accent);background:transparent;color:var(--accent-strong);border-radius:12px;padding:0 16px;font-weight:700}
 @media (max-width:600px){.ttl{display:none}.hint{display:none}.drawer{border-left:0}}
@@ -114,7 +117,7 @@ h2,h4{font-family:var(--display);text-transform:uppercase;letter-spacing:.02em;f
 <nav class="chips" id="chips" aria-label="Швидкий перехід"></nav>
 <div id="vp">
   <div id="stage"><svg id="edges" width="1" height="1"></svg></div>
-  <div class="hint">Колесо миші або щипок: масштаб. Тягніть, щоб рухати схему. Чорні блоки з «+» розкривають посади, на картці посади видно деталі.</div>
+  <div class="hint">Колесо миші або щипок: масштаб. Тягніть, щоб рухати схему. Кнопка «+» розкриває блок, а клік по самому блоку показує інформацію.</div>
   <div class="dock">
     <button id="fit" aria-label="Показати всю схему" title="Вся схема">⤢</button><button id="zout" aria-label="Віддалити">−</button>
     <div class="zmenu"><button class="pct" id="pct" aria-haspopup="true" aria-expanded="false" aria-label="Обрати масштаб">100% ▾</button><ul class="zlist" id="zlist" hidden></ul></div><button id="zin" aria-label="Наблизити">+</button>
@@ -312,7 +315,7 @@ function render(){
     if(!n.ghost){
       var d=document.createElement("div");d.className="node "+n.k+(n.vac?" vac":"");d.dataset.id=n.id;
       d.style.cssText="left:"+n.x+"px;top:"+n.y+"px;width:"+n.w+"px;height:"+n.h+"px";
-      d.innerHTML="<b>"+esc(n.t)+"</b>"+(n.s?"<span>"+esc(n.s)+"</span>":"")+(n.k==="fn"?'<i class="tg">'+(n.open?"−":"+")+"</i>":"");
+      d.innerHTML="<b>"+esc(n.t)+"</b>"+(n.s?"<span>"+esc(n.s)+"</span>":"")+(n.k==="fn"?'<button type="button" class="tg" aria-label="'+(n.open?"Згорнути":"Розгорнути")+' '+esc(n.t)+'" title="'+(n.open?"Згорнути":"Розгорнути")+'">'+(n.open?"−":"+")+'</button>':"");
       d.tabIndex=0;d.setAttribute("role","button");if(n.k==="fn")d.setAttribute("aria-expanded",n.open);n.el=d;stage.appendChild(d)}
     kids(n).forEach(function(c){
       if(c.ghost)return;
@@ -360,9 +363,9 @@ window.addEventListener("pointermove",function(e){var p=ptrs[e.pointerId];if(!p)
     if(pinch)zoomAt(d/pinch,(a[0].x+a[1].x)/2-r.left,(a[0].y+a[1].y)/2-r.top);pinch=d;apply();return}
   p.x=e.clientX;p.y=e.clientY;if(moved>6){V.x+=dx;V.y+=dy;apply()}});
 function up(e){if(!ptrs[e.pointerId])return;delete ptrs[e.pointerId];pinch=0;vp.classList.remove("drag");
-  if(e.type==="pointerup"&&moved<=6&&!Object.keys(ptrs).length){var t=startTarget&&startTarget.closest&&startTarget.closest(".node");if(t)openNode(NODES[t.dataset.id])}}
+  if(e.type==="pointerup"&&moved<=6&&!Object.keys(ptrs).length){var t=startTarget&&startTarget.closest&&startTarget.closest(".node");if(t){var node=NODES[t.dataset.id];if(startTarget.closest(".tg"))toggle(node);else openNode(node)}}}
 window.addEventListener("pointerup",up);window.addEventListener("pointercancel",up);
-vp.addEventListener("keydown",function(e){var t=e.target.closest(".node");if(t&&(e.key==="Enter"||e.key===" ")){e.preventDefault();openNode(NODES[t.dataset.id])}});
+vp.addEventListener("keydown",function(e){var t=e.target.closest(".node");if(!t||(e.key!=="Enter"&&e.key!==" "))return;e.preventDefault();var node=NODES[t.dataset.id];if(e.target.closest(".tg"))toggle(node);else openNode(node)});
 
 /* ---------- jump chips + search ---------- */
 function fly(n,whole){var r=vp.getBoundingClientRect();var box=whole?subBox(n):{x:n.x-120,y:n.y-60,w:W+240,h:n.h+120};
@@ -422,13 +425,15 @@ function roleHtml(r,generic){
   if(!generic)h+=r.p.length?r.p.map(function(s){var a=s.split("|");return'<div class="person"><div><b>'+esc(a[0])+'</b></div><div class="h">'+handleHtml(a[1])+'</div>'+(a[2]?'<span class="where">'+esc(a[2])+'</span>':'')+'</div>'}).join(""):'<div class="vacl">У документі людину не вказано.</div>';
   if(r.d.length)h+='<h4>Обов\'язки</h4>'+listHtml(r.d,"ol");else if(r.nodoc)h+='<div class="vacl">Опису обов\'язків у документі немає.</div>';
   if(r.k.length)h+='<h4>Показники ефективності</h4>'+listHtml(r.k,"ul");return h}
-function openNode(n){
+function fnDrawer(n){var rs=[];(function w(m){if(m.role)rs.push(m);m.ch.forEach(w)})(n);
+  var h='<div class="fnlab">Відділ</div><h2>'+esc(n.t)+'</h2><h4>Посади · '+rs.length+'</h4>'+rs.map(function(m,i){return'<button class="rrow" data-i="'+i+'"><b>'+esc(m.t)+'</b><span>'+esc(m.s)+'</span></button>'}).join("");
+  openDrawer(h);Array.prototype.forEach.call(document.querySelectorAll("#drawer .rrow"),function(b){b.onclick=function(){openNode(rs[+b.dataset.i])}})}function openNode(n){
   if(n.role)return openDrawer(roleHtml(n.role));
   if(n.grp){var g=n.grp,r=roleFor(g.t);
     openDrawer('<div class="fnlab">'+esc(n.org.n)+'</div><h2>'+esc(g.t)+'</h2><h4>Хто на посаді · '+g.people.length+'</h4>'+g.people.map(personRow).join("")+(r?'<button class="btn" id="rb">Опис посади «'+esc(r.t)+'»</button>':''));
     if(r)$("#rb").onclick=function(){openDrawer(roleHtml(r,true))};return}
   if(n.org){var b=n.org;openDrawer('<div class="fnlab">'+(n.fr?'Франшиза':'Філія')+'</div><h2>'+esc(b.n)+'</h2>'+(b.note?'<div class="mission">'+esc(b.note)+'</div>':'')+'<h4>Команда · '+b.p.length+'</h4>'+b.p.map(personRow).join(""));return}
-  if(n.k==="fn")return toggle(n);
+  if(n.k==="fn")return fnDrawer(n);
   if(n.k==="hub")fly(n,true)}
 
 render();
