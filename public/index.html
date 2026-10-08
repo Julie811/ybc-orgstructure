@@ -273,7 +273,8 @@ R("Sales Manager").p=R("Sales Manager").p.filter(function(s){return s.split("|")
 var ONLINE=BR.filter(function(b){return b.n==="Онлайн"})[0].p;
 var BMO=R("Business Manager"),NODOC={d:[],k:[],nodoc:1,fn:"Бізнес-менеджмент",m:"",b:"не вказано в документі",l:"Онлайн"};
 function mk(o){for(var i in NODOC)if(!(i in o))o[i]=NODOC[i];return o}
-R("Chief of Business").l="Київ";R("Chief of Business").b="Управляючий партнер";
+R("Head of IT").b="Андрій Остапчук (Управляючий партнер)";
+R("Chief of Business").l="Київ";R("Chief of Business").b="Андрій Остапчук (Управляючий партнер)";
 BMO.b="CEO локації; у Києві: Chief of BM ("+R("Chief of Business").p[0].split("|")[0]+")";
 var HEADBM=mk({t:"Head of BM Online",p:ONLINE.filter(function(x){return/Head of BM/.test(x[1])}).map(function(x){return x[0]+"|"+x[2]+"|Онлайн"})});
 var BMONL=mk({t:"Business Manager (Online)",m:BMO.m,b:"Head of BM Online",d:BMO.d,k:BMO.k,nodoc:0,p:ONLINE.filter(function(x){return/^Business Manager/.test(x[1])}).map(function(x){return x[0]+"|"+x[2]+"|Онлайн"})});
@@ -285,7 +286,7 @@ ROLES.concat([HEADBM,BMONL]).forEach(function(r){
   if(r.b===PART)r.b=(r.fn==="Фінанси"?"Олена Туз":"Андрій Остапчук")+" (Управляючий партнер)";
   else if(BOSSMAP[r.b]&&BOSSMAP[r.b].p.length)r.b=r.b+" ("+nm(BOSSMAP[r.b])+")"});
 R("Head of Sales").b="Олена Туз (Управляючий партнер)";
-R("Franchise Manager").b="Управляючий партнер";
+R("Franchise Manager").b="Андрій Остапчук (Управляючий партнер)";
 var mktFn=fnNode("Маркетинг",roleNode("CMO",[roleNode("SMM manager"),roleNode("Videomaker"),roleNode("Копірайтер")]));
 var salesFn=fnNode("Продажі",roleNode("Head of Sales",[roleNode("Sales Manager"),roleNode("Асистент керівника")]));
 var itFn=fnNode("IT",roleNode("Head of IT",[roleNode("Zoho Developer"),roleNode("IT Support")]));
@@ -496,7 +497,7 @@ function groupBoss(title,b){
   if(b.fr)return"";
   if(/^(CEO|COO|Partner|Акціонер|Співвласник)/.test(title))return"";
   function who(re,label){var x=b.p.filter(function(y){return re.test(y[1])})[0];return x?label+" ("+x[0]+")":""}
-  if(title==="Chief of BM")return"Управляючий партнер";
+  if(title==="Chief of BM")return"Андрій Остапчук (Управляючий партнер)";
   if(/Business Manager|^BM/.test(title)){var c=who(/^Chief of BM/,"Chief of BM");if(c)return c;var h=who(/^Head of BM/,"Head of BM Online");if(h)return h}
   return who(/^CEO/,"CEO")||who(/^COO/,"COO")||"CEO локації"}
 function personCard(p){
