@@ -41,7 +41,7 @@ h2,h4{font-family:var(--display);text-transform:uppercase;letter-spacing:.02em;f
 #cmenu .all{border-bottom:1px solid var(--border);border-radius:8px 8px 0 0;color:var(--accent-strong);font-weight:700;margin-bottom:4px}
 .chip.on{border-color:var(--accent);color:var(--accent-strong)}
 .chip:hover{border-color:var(--accent);color:var(--accent-strong)}
-#vp{flex:1;position:relative;overflow:hidden;touch-action:none;cursor:grab;background-image:radial-gradient(var(--dots) 1.4px,transparent 1.5px);background-size:28px 28px}
+#vp{flex:1;position:relative;overflow:hidden;touch-action:none;cursor:grab}
 #vp.drag{cursor:grabbing}
 #stage{position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform}
 #stage.anim{transition:transform .5s cubic-bezier(.2,.7,.2,1)}
@@ -152,10 +152,10 @@ var FN=[
   d:["Вирішення бізнес-запитів учасників через нетворкінг","Адаптація після вступу в клуб","Постійна комунікація (1:1 та супровід)","Повторні продажі (продовження членства)","Оплата членського внеску","Вчасний збір зворотного зв'язку","Оновлення інформації в Zoho CRM","Допомога з Клубним додатком і чат-ботом","Супровід на заходах (ВЗ, ланчі, швидкі знайомства)","Допомога в досягненні цілей (бізнес, саморозвиток, хобі)","Запрошення на заходи клубу"],
   k:["50 створених та відправлених «підбірок знайомств»","50 One to One","25 ННН","75–100% продовжуваність усіх учасників"]}]},
 {id:"sales",t:"Продажі",roles:[
- {t:"Team Lead",m:"Організувати продаж максимальної кількості абонементів у клуб гідним підприємцям згідно з планами продажів.",b:"CEO / COO",l:"Central Services",p:["Жанталай Олександр"],
+ {t:"Team Lead",m:"Організувати продаж максимальної кількості абонементів у клуб гідним підприємцям згідно з планами продажів.",b:"CEO / COO",l:"Central Services",p:["Жанталай Олександр|@Oleksandr_Zhantalai_YBC"],
   d:["Щоденний міт з командою","Прослуховування дзвінків менеджерів","Створення і погодження ланчів / мастермайндів з потенційними клієнтами","Контроль ведення CRM","Збір і зведення аналітичних даних","Кваліфікація та виявлення потреб нового клієнта (особисті продажі)","Проведення One-to-One (особисті продажі)","Проведення Ланчу / Мастермайнду (особисті продажі)","Закриття на угоду (особисті продажі)"],
   k:["Виконання плану продажів команди","Планова конверсія з цільового ліда в покупку команди","Виконання особистого плану продажів","Особиста планова конверсія з цільового ліда в покупку"]},
- {t:"Sales Manager",m:"Продати максимальну кількість абонементів у клуб гідним підприємцям згідно з планами продажів.",b:"Sales Team Lead",l:"Central Services",p:["Богдановський Святослав","Доля Єлизавета","Седлецький Іван","Кравченко Владислав|@vladisslava_kr_ybc|Варшава"],
+ {t:"Sales Manager",m:"Продати максимальну кількість абонементів у клуб гідним підприємцям згідно з планами продажів.",b:"Sales Team Lead",l:"Central Services",p:["Богдановський Святослав|@SviatoslavYBC","Доля Єлизавета|@elizavetadolia","Седлецький Іван|@Sedletskyi_Ivan","Кравченко Владислав|@vladisslava_kr_ybc|Варшава"],
   d:["Кваліфікація та виявлення потреб нового клієнта","Проведення One-to-One з потенційним учасником","Проведення Ланчу / Мастермайнду","Закриття на угоду","Актуалізація КУС","Купівля квитків не через додаток","Додавання реквізитів на оплату в картку нового учасника (Zoho CRM)","Додавання потенційних учасників в чати івенту (додаток)","Якісне ведення CRM згідно з інструкцією","Щоденні звіти Team Lead"],
   k:["Виконання особистого плану продажів","Особиста норма конверсії з цільового ліда в покупку","Кількість розподілених лідів","Кількість опрацьованих підходящих лідів","Кількість дзвінків загальна і в базу","Успішні дзвінки (довше 30 сек)","Призначені та проведені one-to-one","Кількість учасників на ланчах","Нові «Одобрені Клубом»","Отримані внески (угоди)"]}]},
 {id:"event",t:"Event",roles:[
@@ -357,7 +357,6 @@ function clamp(){var r=vp.getBoundingClientRect();if(!r.width||!BW)return;
   V.x=cw+2*pad<=r.width?(r.width-cw)/2:Math.min(pad,Math.max(r.width-cw-pad,V.x));
   V.y=ch+2*pad<=r.height?(r.height-ch)/2:Math.min(pad,Math.max(r.height-ch-pad,V.y))}
 function apply(){clamp();stage.style.transform="translate("+V.x+"px,"+V.y+"px) scale("+V.k+")";
-  var s=28*V.k;vp.style.backgroundSize=s+"px "+s+"px";vp.style.backgroundPosition=V.x+"px "+V.y+"px";
   $("#pct").textContent=Math.round(V.k*100)+"% ▾";if(!$("#zlist").hidden)markCur()}
 function anim(fn){stage.classList.add("anim");fn();apply();setTimeout(function(){stage.classList.remove("anim")},520)}
 function zoomAt(f,cx,cy){var k=Math.min(MAXK,Math.max(MINK,V.k*f));f=k/V.k;V.x=cx-(cx-V.x)*f;V.y=cy-(cy-V.y)*f;V.k=k}
