@@ -307,7 +307,7 @@ var P_TUZ={name:"Олена Туз",pos:"Управляючий партнер",
 var P_YAN={name:"Яна Матвійчук",pos:"Акціонер",handle:"@YanaMatviychukARENACS",where:"Central Services"};
 var P_SMA={name:"Андрій Смаль",pos:"Акціонер",handle:"@CRMMaker",where:"Central Services"};
 var ostap=N("root","Андрій Остапчук","Управляючий партнер",[central,branches],{mode:"h",people:[P_OST]});
-var tuz=N("root","Олена Туз","Управляючий партнер",[],{mode:"h",people:[P_TUZ],links:[salesFn,finFn]});
+var tuz=N("root","Олена Туз","Управляючий партнер",[],{mode:"h",people:[P_TUZ],links:[salesFn,finFn],float:true,anchor:[salesFn,finFn]});
 var owners=N("root","Акціонери","Яна Матвійчук · Андрій Смаль",[tuz,ostap,franch],{mode:"h",people:[P_YAN,P_SMA]});
 var world=N("root","","",[owners],{mode:"h",ghost:1,noEdge:1});
 
@@ -318,13 +318,14 @@ function cnt(n){var c=(n.role||n.grp)?1:0;n.ch.forEach(function(x){c+=cnt(x)});r
 NODES.forEach(function(n){if(n.k==="fn"){n.open=false;if(!n.org){var c=cnt(n);n.s=c+" "+(c===1?"посада":c<5?"посади":"посад")}}});
 function kids(n){return n.k==="fn"&&!n.open?[]:n.ch}
 function measure(n){n.w=W;n.h=Hs[n.k];var ch=kids(n);
-  ch.forEach(measure);
-  if(!ch.length){n.sw=W;return}
-  if(n.mode==="h"){var s=0;ch.forEach(function(c){s+=c.sw+(c.gapBefore||0)});n.sw=Math.max(W,s+HGAP*(ch.length-1))}
+  ch.forEach(measure);var nf=ch.filter(function(c){return!c.float});
+  if(!nf.length){n.sw=W;return}
+  if(n.mode==="h"){var s=0;nf.forEach(function(c){s+=c.sw+(c.gapBefore||0)});n.sw=Math.max(W,s+HGAP*(nf.length-1))}
   else{var m=0;ch.forEach(function(c){m=Math.max(m,c.sw)});n.sw=Math.max(W,IND+m)}}
 function place(n,x,y){var ch=kids(n);
   if(n.mode==="h"){y+=(n.dy||0);n.y=y;var cx=x,bot=y+n.h,cy=n.noEdge?y:y+n.h+VGAP;
-    ch.forEach(function(c){cx+=(c.gapBefore||0);var b=place(c,cx,cy);bot=Math.max(bot,b);cx+=c.sw+HGAP});
+    ch.filter(function(c){return!c.float}).forEach(function(c){cx+=(c.gapBefore||0);var b=place(c,cx,cy);bot=Math.max(bot,b);cx+=c.sw+HGAP});
+    ch.filter(function(c){return c.float}).forEach(function(c){c.y=cy;c.x=Math.round(((c.anchor[0].x+W/2)+(c.anchor[c.anchor.length-1].x+W/2))/2-W/2)});
     n.x=ch.length?Math.round(((ch[0].x+W/2)+(ch[ch.length-1].x+W/2))/2-W/2):x+Math.round((n.sw-W)/2);return bot}
   n.x=x;n.y=y;var cy2=y+n.h+GAP,bot2=y+n.h;
   ch.forEach(function(c){var b=place(c,x+IND,cy2);cy2=b+GAP;bot2=b});return bot2}
