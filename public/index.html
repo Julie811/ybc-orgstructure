@@ -22,6 +22,9 @@
 html,body{height:100%}
 body{background:var(--bg);color:var(--ink);font-family:var(--body);line-height:1.4;-webkit-font-smoothing:antialiased;display:flex;flex-direction:column;overflow:hidden}
 button{font:inherit;color:inherit;cursor:pointer}
+body{-webkit-user-select:none;user-select:none}
+input,.drawer,.results{-webkit-user-select:text;user-select:text}
+.drawer button,.results button{-webkit-user-select:none;user-select:none}
 h2,h4{font-family:var(--display);text-transform:uppercase;letter-spacing:.02em;font-weight:600;margin:0;text-wrap:balance}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .bar{flex:none;display:flex;align-items:center;gap:14px;padding:10px 16px;background:var(--bg);border-bottom:1px solid var(--border);flex-wrap:wrap;position:relative;z-index:20}
@@ -389,7 +392,7 @@ document.addEventListener("click",function(e){if(!e.target.closest(".zmenu"))zme
 vp.addEventListener("wheel",function(e){e.preventDefault();var r=vp.getBoundingClientRect();
   var f=Math.exp(-e.deltaY*(e.ctrlKey?.01:.0015));zoomAt(f,e.clientX-r.left,e.clientY-r.top);apply()},{passive:false});
 var ptrs={},moved=0,pinch=0,startTarget=null;
-vp.addEventListener("pointerdown",function(e){if(e.button>0)return;ptrs[e.pointerId]={x:e.clientX,y:e.clientY};moved=0;startTarget=e.target;
+vp.addEventListener("pointerdown",function(e){if(e.button>0)return;if(window.getSelection)try{window.getSelection().removeAllRanges()}catch(_){}ptrs[e.pointerId]={x:e.clientX,y:e.clientY};moved=0;startTarget=e.target;
   if(Object.keys(ptrs).length===2){var a=Object.values(ptrs);pinch=Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y)}});
 window.addEventListener("pointermove",function(e){var p=ptrs[e.pointerId];if(!p)return;
   var ids=Object.keys(ptrs),dx=e.clientX-p.x,dy=e.clientY-p.y;moved+=Math.abs(dx)+Math.abs(dy);
