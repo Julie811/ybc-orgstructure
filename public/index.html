@@ -266,7 +266,7 @@ R("Chief of Business").l="Київ";R("Chief of Business").b="CEO";
 BMO.b="CEO локації; у Києві: Chief of BM ("+R("Chief of Business").p[0].split("|")[0]+")";
 var HEADBM=mk({t:"Head of BM Online",p:ONLINE.filter(function(x){return/Head of BM/.test(x[1])}).map(function(x){return x[0]+"|"+x[2]+"|Онлайн"})});
 var BMONL=mk({t:"Business Manager (Online)",m:BMO.m,b:"Head of BM Online",d:BMO.d,k:BMO.k,nodoc:0,p:ONLINE.filter(function(x){return/^Business Manager/.test(x[1])}).map(function(x){return x[0]+"|"+x[2]+"|Онлайн"})});
-var FRANCH=mk({t:"Франчазі менеджер",fn:"Франчайзинг",l:"Central Services",p:["Марія Усенко|@usenkomaria_ybc"]});
+var FRANCH=mk({t:"Франчазі менеджер",fn:"Операційна функція",l:"Central Services",p:["Марія Усенко|@usenkomaria_ybc"]});
 // "Керівник": додаємо імена
 function nm(r){return r.p.map(function(s){return s.split("|")[0]}).join(", ")}
 var BOSSMAP={"CMO":R("CMO"),"Head of IT":R("Head of IT"),"CFO":R("CFO"),"Головний бухгалтер":R("Головний бухгалтер"),"Sales Team Lead":R("Team Lead"),"Chief of BM":R("Chief of Business"),"Head of HR":R("Head of HR"),"Head of BM Online":HEADBM};
@@ -280,11 +280,10 @@ var salesFn=fnNode("Продажі",roleNode("Team Lead",[roleNode("Sales Manage
 var itFn=fnNode("IT",roleNode("Head of IT",[roleNode("Zoho Developer"),roleNode("IT Support")]));
 var hrFn=fnNode("HR",roleNode("Head of HR",[roleNode("Recruiter")]));
 var finFn=fnNode("Фінанси",roleNode("CFO",[roleNode("Головний бухгалтер",[roleNode("Бухгалтер")]),roleNode("Фінансист"),roleNode("Економіст")]));
-var opsFn=fnNode("Операційна функція",roleNode("Корпоративний секретар"));
+var opsFn=N("fn","Операційна функція","",[roleNode("Корпоративний секретар"),roleNode("",[],FRANCH)]);
 var legalFn=fnNode("Юридична функція",roleNode("Юрист"));
-var frFn=fnNode("Франчайзинг",roleNode("",[],FRANCH));
-var central=N("hub","Central Services","Материнська компанія",[mktFn,itFn,hrFn,opsFn,legalFn,frFn],{mode:"h"});
-var ALLFN=[mktFn,salesFn,itFn,hrFn,finFn,opsFn,legalFn,frFn];
+var central=N("hub","Central Services","Материнська компанія",[mktFn,itFn,hrFn,opsFn,legalFn],{mode:"h"});
+var ALLFN=[mktFn,salesFn,itFn,hrFn,finFn,opsFn,legalFn];
 function groups(b){var g=[],m={};b.p.forEach(function(x){if(!m[x[1]]){m[x[1]]={t:x[1],people:[]};g.push(m[x[1]])}m[x[1]].people.push(x)});return g}
 function orgNode(b,fr){var gs=groups(b).map(function(g){
   return N("role",g.t,pl(g.people.length),[],{grp:g,org:b})});
@@ -351,7 +350,13 @@ function toggle(n){var ox=n.x*V.k+V.x,oy=n.y*V.k+V.y;n.open=!n.open;render();V.x
 
 /* ---------- pan / zoom ---------- */
 var vp=$("#vp"),V={x:0,y:0,k:1},MINK=.05,MAXK=3;
-function apply(){stage.style.transform="translate("+V.x+"px,"+V.y+"px) scale("+V.k+")";
+function clamp(){var r=vp.getBoundingClientRect();if(!r.width||!BW)return;
+  MINK=Math.min((r.width-80)/BW,(r.height-80)/BH,1);if(MINK<.02)MINK=.02;
+  if(V.k<MINK)V.k=MINK;if(V.k>MAXK)V.k=MAXK;
+  var cw=BW*V.k,ch=BH*V.k,pad=60;
+  V.x=cw+2*pad<=r.width?(r.width-cw)/2:Math.min(pad,Math.max(r.width-cw-pad,V.x));
+  V.y=ch+2*pad<=r.height?(r.height-ch)/2:Math.min(pad,Math.max(r.height-ch-pad,V.y))}
+function apply(){clamp();stage.style.transform="translate("+V.x+"px,"+V.y+"px) scale("+V.k+")";
   var s=28*V.k;vp.style.backgroundSize=s+"px "+s+"px";vp.style.backgroundPosition=V.x+"px "+V.y+"px";
   $("#pct").textContent=Math.round(V.k*100)+"% ▾";if(!$("#zlist").hidden)markCur()}
 function anim(fn){stage.classList.add("anim");fn();apply();setTimeout(function(){stage.classList.remove("anim")},520)}
@@ -364,9 +369,9 @@ $("#zin").onclick=function(){var r=vp.getBoundingClientRect();anim(function(){zo
 $("#zout").onclick=function(){var r=vp.getBoundingClientRect();anim(function(){zoomAt(1/1.4,r.width/2,r.height/2)})};
 $("#fit").onclick=function(){anim(function(){fit()})};
 var ZL=[10,25,50,75,100,150,200,300];
-$("#zlist").innerHTML=ZL.map(function(z){return'<li><button data-z="'+z+'">'+z+'%</button></li>'}).join("")+'<li><button data-z="fit">Вся схема</button></li>';
+function buildZ(){clamp();$("#zlist").innerHTML=ZL.filter(function(z){return z/100>=MINK-.004}).map(function(z){return'<li><button data-z="'+z+'">'+z+'%</button></li>'}).join("")+'<li><button data-z="fit">Вся схема</button></li>'}
 function markCur(){var cur=Math.round(V.k*100);Array.prototype.forEach.call($("#zlist").querySelectorAll("button"),function(b){b.classList.toggle("on",+b.dataset.z===cur)})}
-function zmenu(open){$("#zlist").hidden=!open;$("#pct").setAttribute("aria-expanded",open);if(open)markCur()}
+function zmenu(open){if(open)buildZ();$("#zlist").hidden=!open;$("#pct").setAttribute("aria-expanded",open);if(open)markCur()}
 $("#pct").onclick=function(e){e.stopPropagation();zmenu($("#zlist").hidden)};
 $("#zlist").onclick=function(e){var b=e.target.closest("button");if(!b)return;zmenu(false);
   if(b.dataset.z==="fit"){anim(function(){fit()});return}
