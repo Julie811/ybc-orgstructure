@@ -511,8 +511,9 @@ $("#q").addEventListener("input",function(){var v=this.value.trim().toLowerCase(
     var n=nm2[+b.dataset.n];openUp(n);render();n.el.classList.add("hit");fly(n,false)}});
 document.addEventListener("click",function(e){if(!e.target.closest(".search"))$("#res").hidden=true});
 /* ---------- drawer ---------- */
-function openDrawer(html){$("#drawer").innerHTML='<button class="close" id="cl" aria-label="Закрити">✕</button>'+html;$("#layer").hidden=false;$("#cl").onclick=closeDrawer;$("#drawer").scrollTop=0;$("#cl").focus()}
-function closeDrawer(){$("#layer").hidden=true}
+var stack=[];function go(fn){stack.push(fn);fn()}
+function openDrawer(html){var bk=stack.length>1;$("#drawer").innerHTML='<button class="close" id="cl" aria-label="Закрити">✕</button>'+(bk?'<button type="button" class="back" id="bk">← Назад</button>':'')+html;$("#layer").hidden=false;$("#cl").onclick=closeDrawer;if(bk)$("#bk").onclick=function(){stack.pop();stack[stack.length-1]()};$("#drawer").scrollTop=0;$("#cl").focus()}
+function closeDrawer(){$("#layer").hidden=true;stack=[]}
 $("#scrim").onclick=closeDrawer;
 document.addEventListener("keydown",function(e){if(e.key==="Escape"){closeDrawer();$("#res").hidden=true}});
 var COPY_SVG='<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8" rx="1.6"/><path d="M10.5 3.5v-.4a1.6 1.6 0 0 0-1.6-1.6H3.1a1.6 1.6 0 0 0-1.6 1.6v5.8a1.6 1.6 0 0 0 1.6 1.6h.4"/></svg>';
@@ -522,13 +523,11 @@ function copyText(s,done){
   function fb(){var a=document.createElement("textarea");a.value=s;a.style.cssText="position:fixed;opacity:0";document.body.appendChild(a);a.select();try{document.execCommand("copy")}catch(e){}a.remove();done()}
   if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(s).then(done,fb)}else fb()}
 document.addEventListener("click",function(e){var b=e.target.closest(".copy");if(!b)return;e.stopPropagation();
-  copyText(b.dataset.copy,function(){b.innerHTML=OK_SVG;b.classList.add("done");b.title="Скопійовано";setTimeout(function(){b.innerHTML=COPY_SVG;b.classList.remove("done");b.title="Копіювати"},1400)})});var curView=null;
-function findRole(t){var r=roleFor(t)||ROLES.filter(function(q){return q.t===t||q.t.replace(/ · .*/,"")===t})[0];return r&&(r.d.length||r.k.length)?r:null}
+  copyText(b.dataset.copy,function(){b.innerHTML=OK_SVG;b.classList.add("done");b.title="Скопійовано";setTimeout(function(){b.innerHTML=COPY_SVG;b.classList.remove("done");b.title="Копіювати"},1400)})});function findRole(t){var r=roleFor(t)||ROLES.filter(function(q){return q.t===t||q.t.replace(/ · .*/,"")===t})[0];return r&&(r.d.length||r.k.length)?r:null}
 function posHtml(t){return findRole(t)?'<button type="button" class="poslink" data-pos="'+esc(t)+'" title="Відкрити опис посади">'+esc(t)+'</button>':'<span>'+esc(t)+'</span>'}
 document.addEventListener("click",function(e){var b=e.target.closest(".poslink");if(!b)return;e.stopPropagation();
-  var r=findRole(b.dataset.pos);if(!r)return;var back=curView;
-  openDrawer((back?'<button type="button" class="back" id="bk">← Назад</button>':'')+roleHtml(r,true));
-  if(back)$("#bk").onclick=back});
+  var r=findRole(b.dataset.pos);if(!r)return;
+  go(function(){openDrawer(roleHtml(r,true))})});
 function personRow(x){return'<div class="person"><div><b>'+esc(x[0])+'</b><br>'+posHtml(x[1])+'</div><div class="h">'+handleHtml(x[2])+'</div></div>'}
 function listHtml(a,cls){var h="",open=false;
   a.forEach(function(x){if(x.charAt(0)==="#"){if(open)h+="</"+cls+">";open=false;h+='<div class="kg2">'+esc(x.slice(1))+'</div>'}
@@ -555,23 +554,26 @@ function personCard(p){
   var h='<div class="fnlab">Людина</div><h2>'+esc(p.name)+'</h2><dl class="meta"><dt>Посада</dt><dd>'+(findRole(p.pos)?'<button type="button" class="poslink" data-pos="'+esc(p.pos)+'" title="Відкрити опис посади">'+esc(p.pos)+'</button>':esc(p.pos))+'</dd><dt>Локація</dt><dd>'+esc(p.where)+'</dd>'+(p.dep?'<dt>Відділ</dt><dd>'+esc(p.dep)+'</dd>':'')+(boss?'<dt>Керівник</dt><dd>'+esc(boss)+'</dd>':'')+'</dl>'+(p.handle?'<div class="pc-h">'+handleHtml(p.handle)+'</div>':'<div class="vacl">Telegram не вказано</div>')+
     '<div class="btnrow"><button class="btn solid" id="pc-show">Показати на схемі</button>'+(r&&r!==p.role?'<button class="btn" id="pc-role">Опис посади</button>':(r?'<button class="btn" id="pc-role">Обов\'язки та KPI</button>':''))+'</div>';
   return h}
-function openPerson(p){curView=function(){openPerson(p)};
+function openPerson(p){stack=[];go(function(){showPerson(p)})}
+function showPerson(p){
   openDrawer(personCard(p));
   $("#pc-show").onclick=function(){var n=p.node;closeDrawer();openUp(n);render();n.el.classList.add("hit");fly(n,false)};
-  var rb=$("#pc-role");if(rb){var r=p.role||roleFor(p.pos);rb.onclick=function(){openDrawer(roleHtml(r,!p.role))}}}
+  var rb=$("#pc-role");if(rb){var r=p.role||roleFor(p.pos);rb.onclick=function(){go(function(){openDrawer(roleHtml(r,!p.role))})}}}
 function rootDrawer(n){
-  if(n.people.length===1)return openPerson({name:n.people[0].name,pos:n.people[0].pos,where:n.people[0].where,handle:n.people[0].handle,node:n});
+  if(n.people.length===1)return showPerson({name:n.people[0].name,pos:n.people[0].pos,where:n.people[0].where,handle:n.people[0].handle,node:n});
   openDrawer('<div class="fnlab">Central Services</div><h2>'+esc(n.t)+'</h2><h4>Хто · '+n.people.length+'</h4>'+n.people.map(function(p){return personRow([p.name,p.pos,p.handle])}).join(""))}function fnDrawer(n){var rs=[];(function w(m){if(m.role)rs.push(m);m.ch.forEach(w)})(n);
   var h='<div class="fnlab">Відділ</div><h2>'+esc(n.t)+'</h2><h4>Посади · '+rs.length+'</h4>'+rs.map(function(m,i){return'<button class="rrow" data-i="'+i+'"><b>'+esc(m.t)+'</b><span>'+esc(m.s)+'</span></button>'}).join("");
-  openDrawer(h);Array.prototype.forEach.call(document.querySelectorAll("#drawer .rrow"),function(b){b.onclick=function(){openNode(rs[+b.dataset.i])}})}function openNode(n){curView=function(){openNode(n)};
+  openDrawer(h);Array.prototype.forEach.call(document.querySelectorAll("#drawer .rrow"),function(b){b.onclick=function(){go(function(){showNode(rs[+b.dataset.i])})}})}
+function openNode(n){stack=[];go(function(){showNode(n)})}
+function showNode(n){
   if(n.people)return rootDrawer(n);
   if(n.role)return openDrawer(roleHtml(n.role));
   if(n.grp){var g=n.grp,r=roleFor(g.t),bs=groupBoss(g.t,n.org);
     openDrawer('<div class="fnlab">Посада</div><h2>'+esc(g.t)+'</h2><dl class="meta"><dt>Локація</dt><dd>'+esc(n.org.n)+'</dd>'+(bs?'<dt>Керівник</dt><dd>'+esc(bs)+'</dd>':'')+'</dl>'+'<h4>Хто на посаді · '+g.people.length+'</h4>'+g.people.map(personRow).join("")+(r?'<button class="btn" id="rb">Опис посади «'+esc(r.t)+'»</button>':''));
-    if(r)$("#rb").onclick=function(){openDrawer(roleHtml(r,true))};return}
+    if(r)$("#rb").onclick=function(){go(function(){openDrawer(roleHtml(r,true))})};return}
   if(n.org){var b=n.org;openDrawer('<div class="fnlab">'+(n.fr?'Франшиза':'Філія')+'</div><h2>'+esc(b.n)+'</h2>'+(b.note?'<div class="mission">'+esc(b.note)+'</div>':'')+'<h4>Команда · '+b.p.length+'</h4>'+b.p.map(personRow).join(""));return}
   if(n.k==="fn")return fnDrawer(n);
-  if(n.info)return openDrawer('<div class="fnlab">Франшизи</div><h2>'+esc(n.t)+'</h2><div class="mission">'+esc(n.info)+'</div><h4>Клуби · '+n.ch.length+'</h4>'+n.ch.map(function(m,i){return'<button class="rrow" data-i="'+i+'"><b>'+esc(m.t)+'</b><span>'+esc(m.s)+'</span></button>'}).join("")),Array.prototype.forEach.call(document.querySelectorAll("#drawer .rrow"),function(b){b.onclick=function(){openNode(n.ch[+b.dataset.i])}});
+  if(n.info)return openDrawer('<div class="fnlab">Франшизи</div><h2>'+esc(n.t)+'</h2><div class="mission">'+esc(n.info)+'</div><h4>Клуби · '+n.ch.length+'</h4>'+n.ch.map(function(m,i){return'<button class="rrow" data-i="'+i+'"><b>'+esc(m.t)+'</b><span>'+esc(m.s)+'</span></button>'}).join("")),Array.prototype.forEach.call(document.querySelectorAll("#drawer .rrow"),function(b){b.onclick=function(){go(function(){showNode(n.ch[+b.dataset.i])})}});
   if(n.k==="hub")fly(n,true)}
 
 render();
